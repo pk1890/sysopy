@@ -3,14 +3,6 @@
 #define ZESTWA1_LIBRARY_H
 
 
-struct block_arr
-{
-    char **data;
-    size_t block_no;
-    size_t* free_indeces;
-};
-
-
 struct Free_qnode{
     size_t index;
     struct Free_qnode* next;
@@ -22,6 +14,15 @@ struct Free_queue{
     struct Free_qnode* last;
     struct Free_qnode* ward;
 };
+
+struct block_arr
+{
+    char **data;
+    size_t block_no;
+    struct Free_queue* free_indeces;
+    size_t first_free;
+};
+
 
 
 void qpush(struct Free_queue* queue, size_t index);
@@ -37,8 +38,8 @@ struct block_arr* init_array(size_t blk_no);
 
 int write_to_tmp(char* path_to_file);
 
-size_t read_file_to_block(char* path_to_file); // zwraca indeks
+size_t read_file_to_block(struct block_arr* memory, char* path_to_file);// zwraca indeks
 
-int delete_block(size_t index);
+int delete_block(struct block_arr* memory, size_t index);
 
 #endif
