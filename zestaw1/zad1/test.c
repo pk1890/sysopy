@@ -10,7 +10,6 @@ typedef struct Free_qnode Free_qnode;
 #define PATH "/home/mleko/sysopy/zestaw1/zad1/tmp"
 
 int main(){
-    find("/", "mylib.h", "/home/mleko/sysopy/zestaw1/zad1/tmp");
 
     // struct Free_queue* queue = init_queue();
     // printf("%d\n", is_qempty(queue));
@@ -38,11 +37,11 @@ int main(){
     block_arr* mem = init_array(5);
     delete_block(mem, 2);
 
-    for(int i = 0; i < 3; i++){
-    size_t index = read_file_to_block(mem, PATH);
+    for(int i = 0; i < 20; i++){
+    size_t index = find(mem, "/home/mleko", "mylib.h", "/home/mleko/sysopy/zestaw1/zad1/tmp"); 
     //printf("===================");
-    printf("%s, %ld\n+++++++\n", mem->data[index], index);
-   // printf("mleko");
+    printf("%s, %ld\n+++++i=%d++\n", mem->data[index], index, i);
+    if (i %2 == 0) delete_block(mem, index);
     }
 
 

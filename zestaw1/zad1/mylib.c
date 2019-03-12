@@ -79,10 +79,11 @@ int write_to_tmp(char* path_to_file){
     return 0;
 }
 
-void find(char* dir, char* filetofind, char* file){
+size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file){
     CURRENT_DIRECTORY = dir;
     filename = filetofind;
     write_to_tmp(file);
+    return read_file_to_block(memory, file);
 }
 
 
@@ -104,7 +105,7 @@ size_t reserve_next_free_block_idx(struct block_arr* memory){
     
 }
 
-size_t read_file_to_block(struct block_arr* memory, char* path_to_file){
+size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     FILE *tmp_file = fopen(path_to_file, "r");
     size_t file_len = 0;
     if (tmp_file == NULL)
@@ -135,14 +136,19 @@ size_t read_file_to_block(struct block_arr* memory, char* path_to_file){
         exit(EXIT_FAILURE);
     }
     fclose(tmp_file);
+
+    remove(path_to_file);
+    
     return block_index;
  }
 
  int delete_block(struct block_arr* memory, size_t index){
      if(memory->data[index] == NULL){
+         printf("dupa");
          return 1;
      }
     free(memory->data[index]);
     memory->data[index] = NULL;
+    qpush(memory->free_indeces, index);
     return 0;
  }

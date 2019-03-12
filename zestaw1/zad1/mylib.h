@@ -28,6 +28,7 @@ struct block_arr
 void qpush(struct Free_queue* queue, size_t index);
 size_t qpop(struct Free_queue* queue);
 
+size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file);
 struct Free_queue* init_queue();
 
 short is_qempty(struct Free_queue* queue);
@@ -38,7 +39,7 @@ struct block_arr* init_array(size_t blk_no);
 
 int write_to_tmp(char* path_to_file);
 
-size_t read_file_to_block(struct block_arr* memory, char* path_to_file);// zwraca indeks
+size_t read_file_to_block(struct block_arr* memory, const char* path_to_file);// zwraca indeks
 
 int delete_block(struct block_arr* memory, size_t index);
 
