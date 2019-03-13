@@ -1,0 +1,11 @@
+As in results3a.txt, running times are not of much interest
+
+It turns out, that optimizations have little effect on executable
+sizes. Only in -O0 we see, that dynamic and shared cases
+have executables take one disk block (4K) more than when
+other optimizations are used.
+The reason for this is little code size of the program. Most
+of the executable are metadata and boilerplate code present
+regardless of potimizations.
+We would expect something bigger to compile to different sizes
+under different optimizations.

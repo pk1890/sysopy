@@ -1,0 +1,21 @@
+Modern computers are fast enough, that running times of simple routines
+as in our program are hard to measure. Not surprisingly, it's IO
+operations that affect the running time of the program the most.
+In the largest example, finding all index.html in /, summed running
+time of the child process (parent's times were measured as 0) is
+4 seconds while total tile elapsed is about 19 and no
+heavy processes were running on the machine simultaneously.
+
+Slight differences in child time measured are of course due to
+environmental reasons.
+
+What can be of interest is the size of the executable. While size
+and speed optimizations are not employed yet, linking methods also
+affect the size. 'ls -sh' prints:
+
+20K program_dynamic   20K program_shared  812K program_static
+
+which is the expected result - statically linked executable must
+contain it's libraries code in it. The actual size of libsysopyfind.a
+is only about 8K. Program size is so big because when -static is used,
+as in our case, the c standard library is also linked statically.

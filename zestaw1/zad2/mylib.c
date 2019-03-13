@@ -71,7 +71,7 @@ int write_to_tmp(char* path_to_file, char* dir, char* filetofind){
     
     char buff[512];
     snprintf(buff, sizeof(buff), "find %s -name %s > %s", dir, filetofind, path_to_file);
-
+    printf(buff);
     system(buff);
 
     return 0;
@@ -107,7 +107,6 @@ size_t reserve_next_free_block_idx(struct block_arr* memory){
 size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     FILE *tmp_file = fopen(path_to_file, "r");
     size_t file_len = 0;
-    printf("dupa %s", path_to_file);
     if (tmp_file == NULL)
     {
       perror("Error while opening the file.\n");
@@ -143,7 +142,6 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
 
  int delete_block(struct block_arr* memory, size_t index){
      if(memory->data[index] == NULL){
-         printf("dupa");
          return 1;
      }
     free(memory->data[index]);

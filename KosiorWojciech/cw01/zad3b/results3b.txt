@@ -1,0 +1,1110 @@
+As in results3a.txt, running times are not of much interest
+
+It turns out, that optimizations have little effect on executable
+sizes. Only in -O0 we see, that dynamic and shared cases
+have executables take one disk block (4K) more than when
+other optimizations are used.
+The reason for this is little code size of the program. Most
+of the executable are metadata and boilerplate code present
+regardless of potimizations.
+We would expect something bigger to compile to different sizes
+under different optimizations.
+
+Optimization -O0
+sizes:
+ 20K program_dynamic
+ 20K program_shared
+812K program_static
+
+logfile_static_O0
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.08 kernel:0 user:0 child_kernel:2.13 child_user:2.01
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.81 kernel:0 user:0 child_kernel:0.31 child_user:0.33
+command: search_and_load /gnu/store bin tmpfile5
+real:0.54 kernel:0 user:0 child_kernel:0.23 child_user:0.23
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.19 child_user:0.23
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_O0
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.77 kernel:0 user:0 child_kernel:1.83 child_user:2.27
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.92 kernel:0 user:0 child_kernel:0.38 child_user:0.32
+command: search_and_load /gnu/store bin tmpfile5
+real:0.47 kernel:0 user:0 child_kernel:0.17 child_user:0.22
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.2 child_user:0.23
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_O0
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.1 kernel:0 user:0 child_kernel:2.26 child_user:1.97
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.84 kernel:0 user:0 child_kernel:0.4 child_user:0.26
+command: search_and_load /gnu/store bin tmpfile5
+real:0.52 kernel:0 user:0 child_kernel:0.24 child_user:0.21
+command: search_and_load /gnu Makefile tmpfile6
+real:0.44 kernel:0 user:0 child_kernel:0.22 child_user:0.18
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -O1
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_O1
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:21.23 kernel:0 user:0 child_kernel:2.15 child_user:2.2
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.33 child_user:0.34
+command: search_and_load /gnu/store bin tmpfile5
+real:0.5 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.48 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_O1
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.18 kernel:0 user:0 child_kernel:2.1 child_user:2.12
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.83 kernel:0 user:0 child_kernel:0.36 child_user:0.3
+command: search_and_load /gnu/store bin tmpfile5
+real:0.49 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.44 kernel:0 user:0 child_kernel:0.2 child_user:0.2
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_O1
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.9 kernel:0 user:0 child_kernel:2.02 child_user:2.1
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.34 child_user:0.31
+command: search_and_load /gnu/store bin tmpfile5
+real:0.55 kernel:0 user:0 child_kernel:0.23 child_user:0.25
+command: search_and_load /gnu Makefile tmpfile6
+real:0.47 kernel:0 user:0 child_kernel:0.27 child_user:0.16
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -O2
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_O2
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.09 kernel:0 user:0 child_kernel:2.24 child_user:1.98
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.85 kernel:0 user:0 child_kernel:0.35 child_user:0.32
+command: search_and_load /gnu/store bin tmpfile5
+real:0.48 kernel:0 user:0 child_kernel:0.17 child_user:0.25
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.19 child_user:0.23
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_O2
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.55 kernel:0 user:0 child_kernel:2.36 child_user:1.94
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.84 kernel:0 user:0 child_kernel:0.32 child_user:0.34
+command: search_and_load /gnu/store bin tmpfile5
+real:0.5 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.47 kernel:0 user:0 child_kernel:0.24 child_user:0.19
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_O2
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.77 kernel:0 user:0 child_kernel:2.02 child_user:2.13
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.34 child_user:0.33
+command: search_and_load /gnu/store bin tmpfile5
+real:0.47 kernel:0 user:0 child_kernel:0.23 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.42 kernel:0 user:0 child_kernel:0.19 child_user:0.19
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -O3
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_O3
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.68 kernel:0 user:0 child_kernel:2.05 child_user:2.08
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.05 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.87 kernel:0 user:0 child_kernel:0.36 child_user:0.3
+command: search_and_load /gnu/store bin tmpfile5
+real:0.5 kernel:0 user:0 child_kernel:0.26 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.23 child_user:0.2
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_O3
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.45 kernel:0 user:0 child_kernel:2.03 child_user:2.07
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.05 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.87 kernel:0 user:0 child_kernel:0.38 child_user:0.29
+command: search_and_load /gnu/store bin tmpfile5
+real:0.47 kernel:0 user:0 child_kernel:0.23 child_user:0.17
+command: search_and_load /gnu Makefile tmpfile6
+real:0.5 kernel:0 user:0 child_kernel:0.22 child_user:0.24
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_O3
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.74 kernel:0 user:0 child_kernel:2.11 child_user:2.14
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.88 kernel:0 user:0 child_kernel:0.32 child_user:0.35
+command: search_and_load /gnu/store bin tmpfile5
+real:0.53 kernel:0 user:0 child_kernel:0.21 child_user:0.26
+command: search_and_load /gnu Makefile tmpfile6
+real:0.47 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -Os
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_Os
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.72 kernel:0 user:0 child_kernel:2.04 child_user:2.14
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.29 child_user:0.36
+command: search_and_load /gnu/store bin tmpfile5
+real:0.47 kernel:0 user:0 child_kernel:0.17 child_user:0.23
+command: search_and_load /gnu Makefile tmpfile6
+real:0.47 kernel:0 user:0 child_kernel:0.26 child_user:0.17
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_Os
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.63 kernel:0 user:0 child_kernel:2.05 child_user:2.08
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.05 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.88 kernel:0 user:0 child_kernel:0.39 child_user:0.28
+command: search_and_load /gnu/store bin tmpfile5
+real:0.49 kernel:0 user:0 child_kernel:0.2 child_user:0.23
+command: search_and_load /gnu Makefile tmpfile6
+real:0.44 kernel:0 user:0 child_kernel:0.23 child_user:0.17
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_Os
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:20.66 kernel:0 user:0 child_kernel:2.14 child_user:1.99
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.83 kernel:0 user:0 child_kernel:0.32 child_user:0.35
+command: search_and_load /gnu/store bin tmpfile5
+real:0.53 kernel:0 user:0 child_kernel:0.25 child_user:0.2
+command: search_and_load /gnu Makefile tmpfile6
+real:0.47 kernel:0 user:0 child_kernel:0.21 child_user:0.22
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -Ofast
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_Ofast
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.71 kernel:0 user:0 child_kernel:2.02 child_user:2.05
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.05 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.85 kernel:0 user:0 child_kernel:0.39 child_user:0.26
+command: search_and_load /gnu/store bin tmpfile5
+real:0.52 kernel:0 user:0 child_kernel:0.23 child_user:0.22
+command: search_and_load /gnu Makefile tmpfile6
+real:0.49 kernel:0 user:0 child_kernel:0.26 child_user:0.19
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_Ofast
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:20.58 kernel:0 user:0 child_kernel:2.05 child_user:2.06
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.82 kernel:0 user:0 child_kernel:0.34 child_user:0.31
+command: search_and_load /gnu/store bin tmpfile5
+real:0.5 kernel:0 user:0 child_kernel:0.25 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.4 kernel:0 user:0 child_kernel:0.18 child_user:0.2
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_Ofast
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:20.49 kernel:0 user:0 child_kernel:2.11 child_user:2.01
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.05 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.81 kernel:0 user:0 child_kernel:0.32 child_user:0.32
+command: search_and_load /gnu/store bin tmpfile5
+real:0.47 kernel:0 user:0 child_kernel:0.22 child_user:0.2
+command: search_and_load /gnu Makefile tmpfile6
+real:0.44 kernel:0 user:0 child_kernel:0.19 child_user:0.21
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+
+Optimization -Og
+sizes:
+ 16K program_dynamic
+ 16K program_shared
+812K program_static
+
+logfile_static_Og
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.1 kernel:0 user:0 child_kernel:2.09 child_user:2.16
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.88 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: search_directory .. Makefile tmpfile3
+real:0.86 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.89 kernel:0 user:0 child_kernel:0.35 child_user:0.32
+command: search_and_load /gnu/store bin tmpfile5
+real:0.49 kernel:0 user:0 child_kernel:0.23 child_user:0.19
+command: search_and_load /gnu Makefile tmpfile6
+real:0.43 kernel:0 user:0 child_kernel:0.15 child_user:0.24
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_shared_Og
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.46 kernel:0 user:0 child_kernel:2.03 child_user:2.07
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.05 kernel:0 user:0 child_kernel:0.01 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.28 child_user:0.38
+command: search_and_load /gnu/store bin tmpfile5
+real:0.46 kernel:0 user:0 child_kernel:0.22 child_user:0.18
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.21 child_user:0.22
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+
+logfile_dynamic_Og
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:18.46 kernel:0 user:0 child_kernel:1.97 child_user:2.18
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.03 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.81 kernel:0 user:0 child_kernel:0.33 child_user:0.31
+command: search_and_load /gnu/store bin tmpfile5
+real:0.46 kernel:0 user:0 child_kernel:0.13 child_user:0.27
+command: search_and_load /gnu Makefile tmpfile6
+real:0.46 kernel:0 user:0 child_kernel:0.24 child_user:0.18
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+

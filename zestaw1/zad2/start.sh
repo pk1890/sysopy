@@ -3,9 +3,21 @@
 S="search_directory"
 D="delete_block"
 T="stress_test"
-DIR="/home"
+DIR="/"
 FILE="Makefile"
-TMP="tmp"
-ARGS=" 100 $S $DIR $FILE $TMP $D 0"
-export LD_LIBRARY_PATH=/home/mleko/sysopy/zestaw1/zadania:$LD_LIBRARY_PATH
-./main_shared
+TMP="/tmp/tmp"
+ARGS=" 100 $T $DIR $FILE $TMP 500000 $D 0"
+export LD_LIBRARY_PATH=/home/mleko/sysopy/zestaw1/zad1:$LD_LIBRARY_PATH
+
+echo "=====BIG SEARCH:"
+
+./zad2_static 100 $S "/" "\"*\"" $TMP $D 0
+
+echo "=====MEDIUM SEARCH:"
+
+./zad2_static 100 $S "/usr" "\"*\"" $TMP $D 0
+echo "=====SMALL SEARCH:"
+
+./zad2_static 100 $S "/usr/bin" "\"*\"" $TMP $D 0
+echo "=================STRESS TEST"
+./zad2_static $ARGS

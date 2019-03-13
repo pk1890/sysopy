@@ -1,22 +1,35 @@
-all: static shared
+CC=gcc
+FLAGS= -Wall -Werror -pedantic -std=c11
+LFLAGS= -L ./
 
-simple:	#simply compiles all files together
-	gcc -Wall mylib.c test.c -o main
+all: zad2_static zad2_shared
+libs: static shared
 
-static:	#first compiles .c files to .o files, then compiles it together with main file
-	make clean
-	gcc -c -Wall zad2.c 
-	gcc -Wall zad2.o ../zad1/libmylib.a -o program_static
 
-shared: #kompiluje jako biblioteke współdzieloną
-	make clean
-	gcc -c -Wall -Werror -fpic mylib.c
-	gcc -shared -o libmylib.so mylib.o
-	gcc -L ./ -Wall -o test_shared test.c -lmylib
+mylib_shared.o: FLAGS += -fPIC
+mylib_static.o mylib_shared.o: mylib.c
+	$(CC) $(FLAGS) -c $? -o $@
 
-clean:	#removes everything apart from source files; it's nice to have such cleaning command
-	rm -f *.o main
+libmylib.a: mylib_static.o
+	ar rcs $@ $?
 
-reset:
-	make clean
-	rm -f *.so *.out
+libmylib.so: FLAGS += -shared
+libmylib.so: mylib_shared.o
+	$(CC) $(FLAGS) $? -o $@
+
+static: libmylib.a
+
+shared: libmylib.so
+
+zad2.o: zad2.c
+	$(CC) $(FLAGS) $? -c -o $@
+
+zad2_static: zad2.o libmylib.a 
+	$(CC) $(FLAGS) $^ -o $@
+
+zad2_shared: LFLAGS += -Wl,-rpath=./
+zad2_shared: libmylib.so zad2.o
+	$(CC) $(FLAGS) $^ $(LFLAGS) -lmylib -o $@
+	
+clean:
+	rm -f *.so *.out *.o *.a

@@ -13,12 +13,17 @@ typedef struct {
 	double elapsed_real;
 	double elapsed_user;
 	double elapsed_kernel;
+    double elapsed_Cuser;
+	double elapsed_Ckernel;
 } timer;
 void time_reset(timer* timers, int count) {
 	for(int i = 0; i < count; i++) {
 		timers[i].elapsed_real = 0;
 		timers[i].elapsed_user = 0;
 		timers[i].elapsed_kernel = 0;
+		timers[i].elapsed_Cuser = 0;
+		timers[i].elapsed_Ckernel = 0;
+
 	}
 }
 
@@ -31,8 +36,10 @@ void time_update(timer* t) {
 	clock_t real_end = times(&end);
 
 	t->elapsed_real += timediff(t->real_start, real_end);
-	t->elapsed_user += timediff(t->start.tms_cutime, end.tms_cutime);
-	t->elapsed_kernel  += timediff(t->start.tms_cstime, end.tms_cstime);
+	t->elapsed_user += timediff(t->start.tms_utime, end.tms_utime);
+	t->elapsed_kernel  += timediff(t->start.tms_stime, end.tms_stime);
+    t->elapsed_Cuser += timediff(t->start.tms_cutime, end.tms_cutime);
+	t->elapsed_Ckernel  += timediff(t->start.tms_cstime, end.tms_cstime);
 }
 
 void time_start(timer *t){
@@ -42,9 +49,11 @@ void time_start(timer *t){
 void time_print(timer* t, char* label) {
     printf("================ %s", label);
     putchar('\n');
-    printf("  real time:    %0.10fs", t->elapsed_real);
-    printf("  user time:    %0.10fs", t->elapsed_user);
-    printf("  kernel time:   %0.10fs\n", t->elapsed_kernel);
+    printf("  real time:    %0.2fs", t->elapsed_real);
+    printf("  user time:    %0.2fs", t->elapsed_user);
+    printf("  kernel time:   %0.2fs", t->elapsed_kernel);
+    printf("  child user time:    %0.2fs", t->elapsed_Cuser);
+    printf("  child kernel time:   %0.2fs\n", t->elapsed_Ckernel);
 }
 
 void printHelp(){
@@ -53,6 +62,7 @@ void printHelp(){
 		"\tsearch_directory <dir> <file> <tmp_file_name>\t- search for <file> in <dir>\n" \
 		"\tdelete_block <index>\t- delete result from <index>\n" );
 }
+
 
 int main(int argc, char** argv){
     timer timers[4];
@@ -80,15 +90,16 @@ int main(int argc, char** argv){
             char* dir = argv[++i];
             char* file = argv[++i];
             char* tmp = argv[++i];
-            // time_start(find_timer);
-            // write_to_tmp(dir, file, tmp);
-            // time_update(find_timer);
+            time_start(find_timer);
+            //system("sleep 30");
+            write_to_tmp(tmp, dir, file);
+            time_update(find_timer);
 
-            // time_start(alloc_timer);
-            // read_file_to_block(memory, tmp);
-            // time_update(alloc_timer);
+            time_start(alloc_timer);
+            read_file_to_block(memory, tmp);
+            time_update(alloc_timer);
             
-            find(memory, dir, file, tmp);
+            //find(memory, dir, file, tmp);
 
         } else if (strcmp(argv[i], "delete_block") == 0){
             if(argc-i <=1){
@@ -100,12 +111,22 @@ int main(int argc, char** argv){
             delete_block(memory, index);
             time_update(delete_timer);
         }else if(strcmp(argv[i], "stress_test") == 0){
-            char* filename = argv[++i];
+            if(argc-i <=4){
+                printf("Bad number of arguments\n");
+                exit(EXIT_FAILURE);
+            }
+            
+            char* dir = argv[++i];
+            char* file = argv[++i];
+            char* tmp = argv[++i];
             size_t count = (size_t)atoi(argv[++i]);
             size_t index;
+
+            write_to_tmp(tmp, dir, file);
+
             time_start(add_and_delete_timer);
             for(size_t i = 0; i < count; i++){
-                index = read_file_to_block(memory, filename);
+                index = read_file_to_block(memory, file);
                 delete_block(memory, index);
             }
             time_update(add_and_delete_timer);

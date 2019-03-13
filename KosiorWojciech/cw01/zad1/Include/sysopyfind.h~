@@ -1,0 +1,17 @@
+#include <stdlib.h>
+
+char *sysopyfind_create_array(size_t size);
+
+void sysopyfind_free_array(void);
+
+char *sysopyfind_set_dir(const char *dir);
+
+char *sysopyfind_set_file(const char *file);
+
+int *sysopyfind_invoke(const char *tmpfile_name);
+
+ssize_t *sysopyfind_load_file(char *file_name, ssize_t *filesize);
+
+ssize_t *sysopyfind_load_last_tmpfile(void);
+
+void *sysopyfind_delete_block(size_t index);

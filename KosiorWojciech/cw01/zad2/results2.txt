@@ -1,0 +1,48 @@
+command: create_array 40
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory / index.html tmpfile1
+real:19.6 kernel:0 user:0 child_kernel:2.02 child_user:2.09
+command: search_directory /usr/share/kbd/ LC_MESSAGES tmpfile2
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_directory .. Makefile tmpfile3
+real:0.04 kernel:0 user:0 child_kernel:0 child_user:0.01
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile3
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile2
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: load_tmpfile ./tmpfile1
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 37
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 38
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 39
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: free_array
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: create_array 10
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: search_and_load /usr bin tmpfile4
+real:0.86 kernel:0 user:0 child_kernel:0.36 child_user:0.28
+command: search_and_load /gnu/store bin tmpfile5
+real:0.52 kernel:0 user:0 child_kernel:0.23 child_user:0.22
+command: search_and_load /gnu Makefile tmpfile6
+real:0.48 kernel:0 user:0 child_kernel:0.23 child_user:0.2
+command: remove_block 7
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 9
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
+command: remove_block 8
+real:0 kernel:0 user:0 child_kernel:0 child_user:0
