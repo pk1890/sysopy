@@ -11,9 +11,6 @@
 // };
 
 
-char* CURRENT_DIRECTORY;
-char* filename;
-
 
 void qpush(struct Free_queue* queue, size_t index){
     struct Free_qnode *node = malloc(sizeof(struct Free_qnode));
@@ -69,21 +66,23 @@ struct block_arr* init_array(size_t blk_no){
     return result;
 }
 
-int write_to_tmp(char* path_to_file){
-    if(path_to_file == NULL || filename == NULL || CURRENT_DIRECTORY == NULL) return -1;
+int write_to_tmp(char* path_to_file, char* dir, char* filetofind){
+    if(path_to_file == NULL || filetofind == NULL || dir == NULL) return -1;
     
     char buff[512];
-    snprintf(buff, sizeof(buff), "find %s -name %s > %s", CURRENT_DIRECTORY, filename, path_to_file);
+    snprintf(buff, sizeof(buff), "find %s -name %s > %s", dir, filetofind, path_to_file);
 
     system(buff);
+
     return 0;
 }
 
 size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file){
-    CURRENT_DIRECTORY = dir;
-    filename = filetofind;
-    write_to_tmp(file);
-    return read_file_to_block(memory, file);
+    write_to_tmp(file, dir, filetofind);
+    size_t res = read_file_to_block(memory, file);
+    remove(file);
+    return res;
+
 }
 
 
@@ -108,6 +107,7 @@ size_t reserve_next_free_block_idx(struct block_arr* memory){
 size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     FILE *tmp_file = fopen(path_to_file, "r");
     size_t file_len = 0;
+    printf("dupa %s", path_to_file);
     if (tmp_file == NULL)
     {
       perror("Error while opening the file.\n");
@@ -137,7 +137,6 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     }
     fclose(tmp_file);
 
-    remove(path_to_file);
     
     return block_index;
  }

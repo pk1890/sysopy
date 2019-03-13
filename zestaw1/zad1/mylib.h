@@ -37,9 +37,9 @@ void setPath(char* given_path);
 
 struct block_arr* init_array(size_t blk_no);
 
-int write_to_tmp(char* path_to_file);
-
+int write_to_tmp(char* path_to_file, char* dir, char* filetofind);
 size_t read_file_to_block(struct block_arr* memory, const char* path_to_file);// zwraca indeks
+
 
 int delete_block(struct block_arr* memory, size_t index);
 
