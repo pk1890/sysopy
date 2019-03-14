@@ -5,6 +5,7 @@
 #include "../zad1/mylib.h"
 #include <zconf.h>
 
+typedef struct block_arr block_arr;
 typedef struct tms tms;
 typedef struct {
 	clock_t real_start;

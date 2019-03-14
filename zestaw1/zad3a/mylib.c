@@ -107,7 +107,6 @@ size_t reserve_next_free_block_idx(struct block_arr* memory){
 size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     FILE *tmp_file = fopen(path_to_file, "r");
     size_t file_len = 0;
-    printf("dupa %s", path_to_file);
     if (tmp_file == NULL)
     {
       perror("Error while opening the file.\n");
@@ -143,7 +142,6 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
 
  int delete_block(struct block_arr* memory, size_t index){
      if(memory->data[index] == NULL){
-         printf("dupa");
          return 1;
      }
     free(memory->data[index]);
@@ -151,3 +149,15 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     qpush(memory->free_indeces, index);
     return 0;
  }
+
+ void delete_block_arr (struct block_arr** mem){
+    for(size_t i = 0; i < (*mem)->block_no ; i++){
+        if((*mem)->data[i] != NULL){
+            free((*mem)->data[i]);
+            (*mem)->data[i] = NULL;
+        }
+
+    }
+    free ( (*mem) );
+    (*mem) = NULL;
+}

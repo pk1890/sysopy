@@ -2,8 +2,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/times.h>
-#include "../zad1/mylib.h"
 #include <zconf.h>
+
+
+#ifndef DYNAMIC
+#include "../zad1/mylib.h"
+#endif
+
+
+#ifdef DYNAMIC
+#include <dlfcn.h>
+
+void * mylib;
+
+typedef struct {
+    size_t index;
+    struct Free_qnode* next;
+    
+} Free_qnode;
+
+typedef struct {
+    struct Free_qnode* first;
+    struct Free_qnode* last;
+    struct Free_qnode* ward;
+} Free_queue;
+
+typedef struct
+{
+    char **data;
+    size_t block_no;
+    struct Free_queue* free_indeces;
+    size_t first_free;
+} block_arr;
+
+block_arr* (*init_array)(size_t);
+size_t (*find)(block_arr*, char*, char*, char*);
+int (*write_to_tmp)(char* , char* , char*);
+size_t (*read_file_to_block)(block_arr* , const char*);
+int (*delete_block)(block_arr* , size_t);
+void (*delete_block_arr)(block_arr** );
+
+
+void dynamic_load_error() {
+	fprintf(stderr, "Could not load dynamic library");
+	exit(1);
+}
+#endif
+
 
 typedef struct tms tms;
 typedef struct {
@@ -64,6 +109,19 @@ void printHelp(){
 
 
 int main(int argc, char** argv){
+
+    #ifdef DYNAMIC
+	mylib = dlopen("../zad1/libmylib.so", RTLD_LAZY);
+	if (mylib == NULL) dynamic_load_error();
+	
+    init_array = dlsym(mylib, "init_array");
+    delete_block_arr = dlsym(mylib, "delete_block_arr");
+
+
+	if (init_array == NULL || delete_block_arr == NULL) dynamic_load_error();
+	#endif
+
+
     timer timers[4];
 	time_reset(timers, 4);
 	timer* find_timer  = &timers[0];
@@ -86,6 +144,17 @@ int main(int argc, char** argv){
                 printf("Bad number of arguments\n");
                 exit(EXIT_FAILURE);
             }
+
+            #ifdef DYNAMIC
+            write_to_tmp = dlsym(mylib, "write_to_tmp");
+            read_file_to_block = dlsym(mylib, "read_file_to_block");
+
+            if(write_to_tmp == NULL || read_file_to_block == NULL){
+                dynamic_load_error();
+            }
+
+            #endif
+
             char* dir = argv[++i];
             char* file = argv[++i];
             char* tmp = argv[++i];
@@ -105,6 +174,17 @@ int main(int argc, char** argv){
                 printf("Bad number of arguments\n");
                 exit(EXIT_FAILURE);
             }
+
+            #ifdef DYNAMIC
+            delete_block = dlsym(mylib, "delete_block");
+
+            if(write_to_tmp == NULL || read_file_to_block == NULL || delete_block == NULL){
+                dynamic_load_error();
+            }
+
+            #endif
+            
+
             size_t index = atoi (argv[++i]);
             time_start(delete_timer);
             delete_block(memory, index);
@@ -114,6 +194,17 @@ int main(int argc, char** argv){
                 printf("Bad number of arguments\n");
                 exit(EXIT_FAILURE);
             }
+
+            #ifdef DYNAMIC
+            write_to_tmp = dlsym(mylib, "write_to_tmp");
+            read_file_to_block = dlsym(mylib, "read_file_to_block");
+            delete_block = dlsym(mylib, "delete_block");
+
+            if(write_to_tmp == NULL || read_file_to_block == NULL || delete_block == NULL){
+                dynamic_load_error();
+            }
+
+            #endif
             
             char* dir = argv[++i];
             char* file = argv[++i];

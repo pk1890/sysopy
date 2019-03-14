@@ -1,0 +1,1 @@
+Jak widzimy najlepsze rezultaty czasowe osiągnięto dzięki statycznemu ładowaniu biblioteki, drugie pod względem czasu uplasowało się dynamiczne ładowanie biblioteki a na końcu współdzielone.

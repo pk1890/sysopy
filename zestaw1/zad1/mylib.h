@@ -3,44 +3,47 @@
 #define ZESTWA1_LIBRARY_H
 
 
-struct Free_qnode{
+
+typedef struct Free_qnode{
     size_t index;
     struct Free_qnode* next;
-    
-};
 
-struct Free_queue{
-    struct Free_qnode* first;
-    struct Free_qnode* last;
-    struct Free_qnode* ward;
-};
+} Free_qnode;
 
-struct block_arr
+typedef struct {
+    Free_qnode* first;
+    Free_qnode* last;
+    Free_qnode* ward;
+} Free_queue;
+
+typedef struct 
 {
     char **data;
     size_t block_no;
-    struct Free_queue* free_indeces;
+    Free_queue* free_indeces;
     size_t first_free;
-};
+} block_arr;
 
 
 
-void qpush(struct Free_queue* queue, size_t index);
-size_t qpop(struct Free_queue* queue);
+void qpush( Free_queue* queue, size_t index);
+size_t qpop( Free_queue* queue);
 
-size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file);
-struct Free_queue* init_queue();
+size_t find( block_arr* memory, char* dir, char* filetofind, char* file);
+Free_queue* init_queue();
 
-short is_qempty(struct Free_queue* queue);
+short is_qempty(Free_queue* queue);
 
 void setPath(char* given_path);
 
-struct block_arr* init_array(size_t blk_no);
+block_arr* init_array(size_t blk_no);
 
 int write_to_tmp(char* path_to_file, char* dir, char* filetofind);
-size_t read_file_to_block(struct block_arr* memory, const char* path_to_file);// zwraca indeks
+size_t read_file_to_block(block_arr* memory, const char* path_to_file);// zwraca indeks
 
 
-int delete_block(struct block_arr* memory, size_t index);
+int delete_block( block_arr* memory, size_t index);
+
+void delete_block_arr (block_arr**);
 
 #endif
