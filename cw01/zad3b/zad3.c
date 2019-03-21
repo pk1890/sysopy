@@ -137,6 +137,14 @@ int main(int argc, char** argv){
 
     block_arr* memory = init_array((size_t)atoi(argv[1]));
 
+
+    if(memory == NULL){
+        printf("Bad arguments\n");
+        printHelp();
+        exit(EXIT_FAILURE);
+    }
+
+
     for(size_t i = 2; i < argc; ++i)
     {
         if (strcmp(argv[i], "search_directory") == 0){

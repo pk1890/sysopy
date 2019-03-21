@@ -6,7 +6,7 @@ T="stress_test"
 DIR="/"
 FILE="Makefile"
 TMP="/tmp/tmp"
-ARGS=" 100 $T $DIR $FILE $TMP 500000 $D 0"
+ARGS="100 $T $DIR $FILE $TMP 500000 $D 0"
 export LD_LIBRARY_PATH=/home/mleko/sysopy/cw01/zad1:$LD_LIBRARY_PATH
 
 echo "=====BIG SEARCH:"

@@ -31,14 +31,14 @@ int main(){
 
     // printf("%d\n", is_qempty(queue));
 
-    block_arr* mem = init_array(50);
+    block_arr* mem = init_array(5);
     delete_block(mem, 2);
 
     for(int i = 0; i < 20; i++){
     size_t index = find(mem, "/home/mleko", "mylib.h", "/home/mleko/sysopy/cw01/zad1/tmp"); 
     //printf("===================");
     printf("%s, %ld\n+++++i=%d++\n", mem->data[index], index, i);
-    //if (i %2 == 0) delete_block(mem, index);
+    if (i %2 == 0) delete_block(mem, index);
     }
 
     delete_block_arr(&(mem));

@@ -3,31 +3,22 @@
 #include <stddef.h>
 #include "mylib.h"
 
-// struct block_arr
-// {
-//     char **data;
-//     size_t block_no;
-//     size_t* free_indeces;
-// };
-
-
-
-void qpush(struct Free_queue* queue, size_t index){
-    struct Free_qnode *node = malloc(sizeof(struct Free_qnode));
+void qpush(Free_queue* queue, size_t index){
+    Free_qnode *node = malloc(sizeof(Free_qnode));
     node->index = index;
     node->next = NULL;
 
     queue->last->next = node;
     queue->last = node;
 }
-size_t qpop(struct Free_queue* queue){
+size_t qpop(Free_queue* queue){
     
-    struct Free_qnode* res = queue->first->next;
+    Free_qnode* res = queue->first->next;
     queue->first->next = res->next;
     return res->index;
 }
 
-short is_qempty(struct Free_queue* queue){
+short is_qempty(Free_queue* queue){
     if(queue == NULL || queue->first == NULL){
         printf("Error - freelist not allocated properly\n");
         exit(EXIT_FAILURE);
@@ -37,10 +28,10 @@ short is_qempty(struct Free_queue* queue){
     return 0;
 }
 
-struct Free_queue* init_queue(){
-    struct Free_qnode* ward = malloc(sizeof(struct Free_qnode));
+Free_queue* init_queue(){
+    Free_qnode* ward = malloc(sizeof(Free_qnode));
     ward->next = NULL;
-    struct Free_queue* queue = malloc(sizeof(struct Free_queue));
+    Free_queue* queue = malloc(sizeof(Free_queue));
     queue->first = ward;
     queue->last = ward;
     queue->ward = ward;
@@ -49,13 +40,13 @@ struct Free_queue* init_queue(){
 }
 
 
-struct block_arr* init_array(size_t blk_no){
+block_arr* init_array(size_t blk_no){
 
     if(blk_no == 0){
         return NULL;
     }
 
-    struct block_arr* result = (struct block_arr*)calloc(1, sizeof (struct block_arr));
+    block_arr* result = (block_arr*)calloc(1, sizeof (block_arr));
 
     result->block_no  = blk_no;
     result->data = (char**)calloc(blk_no, sizeof (char*));
@@ -77,7 +68,7 @@ int write_to_tmp(char* path_to_file, char* dir, char* filetofind){
     return 0;
 }
 
-size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file){
+size_t find(block_arr* memory, char* dir, char* filetofind, char* file){
     write_to_tmp(file, dir, filetofind);
     size_t res = read_file_to_block(memory, file);
     remove(file);
@@ -86,7 +77,7 @@ size_t find(struct block_arr* memory, char* dir, char* filetofind, char* file){
 }
 
 
-size_t reserve_next_free_block_idx(struct block_arr* memory){
+size_t reserve_next_free_block_idx(block_arr* memory){
     size_t idx;
 
     if(memory->first_free < memory->block_no){
@@ -104,7 +95,7 @@ size_t reserve_next_free_block_idx(struct block_arr* memory){
     
 }
 
-size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
+size_t read_file_to_block(block_arr* memory, const char* path_to_file){
     FILE *tmp_file = fopen(path_to_file, "r");
     size_t file_len = 0;
     if (tmp_file == NULL)
@@ -140,7 +131,7 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     return block_index;
  }
 
- int delete_block(struct block_arr* memory, size_t index){
+ int delete_block(block_arr* memory, size_t index){
      if(memory->data[index] == NULL){
          return 1;
      }
@@ -150,7 +141,7 @@ size_t read_file_to_block(struct block_arr* memory, const char* path_to_file){
     return 0;
  }
 
- void delete_block_arr (struct block_arr** mem){
+ void delete_block_arr (block_arr** mem){
     for(size_t i = 0; i < (*mem)->block_no ; i++){
         if((*mem)->data[i] != NULL){
             free((*mem)->data[i]);

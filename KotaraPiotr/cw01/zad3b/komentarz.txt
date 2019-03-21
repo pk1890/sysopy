@@ -1,0 +1,11 @@
+Porownanie czasow rzeczywistych z biblioteka statyczna przy testach add and delete many time dla jednego z testow
+ 
+
+O1 jest wolniejsze od O0 (1.98s)
+O2 to samo co O0 
+O3 pare setnych wolniejsze od O0 1.93s
+Os 1.92s
+Og 1.97s
+
+
+Jak widac czasy sa bardzo podobne do siebie roznia sie o pare setnych sekundy i wahaja sie w zaleznosci od testu, poniewaz system moze roznie przydzielic procesom czas procesora. 

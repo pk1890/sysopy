@@ -1,9 +1,9 @@
-#include <memory.h>
+#include <memory.h> //potrzebna do strcmp
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/times.h>
+#include <sys/times.h> //do mierzenia czasu
 #include "../zad1/mylib.h"
-#include <zconf.h>
+#include <zconf.h> //do zmiennej sysconf(_SC_CLK_TCK); 
 
 typedef struct tms tms;
 typedef struct {
@@ -78,6 +78,12 @@ int main(int argc, char** argv){
     }
 
     block_arr* memory = init_array((size_t)atoi(argv[1]));
+
+    if(memory == NULL){
+        printf("Bad arguments\n");
+        printHelp();
+        exit(EXIT_FAILURE);
+    }
 
     for(size_t i = 2; i < argc; ++i)
     {

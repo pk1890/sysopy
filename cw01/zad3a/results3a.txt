@@ -4,22 +4,22 @@ TESTY
 TESTING main_static
 =====BIG SEARCH:
 ================ Find time
-  real time:    1.34s  user time:    0.00s  kernel time:   0.00s  child user time:    0.58s  child kernel time:   0.73s
-================ Allocation time
-  real time:    0.04s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
-================ Deleting time
-  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
-================ Add and delete many times time
-  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
-=====MEDIUM SEARCH:
-================ Find time
-  real time:    0.52s  user time:    0.00s  kernel time:   0.00s  child user time:    0.22s  child kernel time:   0.27s
+  real time:    0.92s  user time:    0.00s  kernel time:   0.00s  child user time:    0.41s  child kernel time:   0.49s
 ================ Allocation time
   real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
 ================ Deleting time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+=====MEDIUM SEARCH:
+================ Find time
+  real time:    0.47s  user time:    0.00s  kernel time:   0.00s  child user time:    0.19s  child kernel time:   0.27s
+================ Allocation time
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Deleting time
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Add and delete many times time
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 =====SMALL SEARCH:
 ================ Find time
   real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
@@ -37,26 +37,26 @@ TESTING main_static
 ================ Deleting time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
-  real time:    1.96s  user time:    0.63s  kernel time:   1.27s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    1.76s  user time:    0.50s  kernel time:   1.21s  child user time:    0.00s  child kernel time:   0.00s
 
 
 TESTING main_shared
 =====BIG SEARCH:
 ================ Find time
-  real time:    1.30s  user time:    0.00s  kernel time:   0.00s  child user time:    0.53s  child kernel time:   0.74s
+  real time:    0.94s  user time:    0.00s  kernel time:   0.00s  child user time:    0.45s  child kernel time:   0.47s
 ================ Allocation time
-  real time:    0.03s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.02s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
 ================ Deleting time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 =====MEDIUM SEARCH:
 ================ Find time
-  real time:    0.51s  user time:    0.00s  kernel time:   0.00s  child user time:    0.18s  child kernel time:   0.31s
+  real time:    0.47s  user time:    0.00s  kernel time:   0.00s  child user time:    0.20s  child kernel time:   0.25s
 ================ Allocation time
   real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Deleting time
-  real time:    0.00s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 =====SMALL SEARCH:
@@ -76,26 +76,26 @@ TESTING main_shared
 ================ Deleting time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
-  real time:    1.90s  user time:    0.57s  kernel time:   1.26s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    1.76s  user time:    0.50s  kernel time:   1.21s  child user time:    0.00s  child kernel time:   0.00s
 
 
 TESTING main_dynamic
 =====BIG SEARCH:
 ================ Find time
-  real time:    1.29s  user time:    0.00s  kernel time:   0.00s  child user time:    0.48s  child kernel time:   0.79s
+  real time:    0.93s  user time:    0.00s  kernel time:   0.00s  child user time:    0.38s  child kernel time:   0.53s
 ================ Allocation time
-  real time:    0.05s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
 ================ Deleting time
-  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 =====MEDIUM SEARCH:
 ================ Find time
-  real time:    0.52s  user time:    0.00s  kernel time:   0.00s  child user time:    0.21s  child kernel time:   0.28s
+  real time:    0.47s  user time:    0.00s  kernel time:   0.00s  child user time:    0.19s  child kernel time:   0.27s
 ================ Allocation time
-  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Deleting time
-  real time:    0.00s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 =====SMALL SEARCH:
@@ -115,4 +115,4 @@ TESTING main_dynamic
 ================ Deleting time
   real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
 ================ Add and delete many times time
-  real time:    1.89s  user time:    0.53s  kernel time:   1.29s  child user time:    0.00s  child kernel time:   0.00s
+  real time:    1.76s  user time:    0.48s  kernel time:   1.23s  child user time:    0.00s  child kernel time:   0.00s

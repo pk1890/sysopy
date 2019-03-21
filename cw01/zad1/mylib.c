@@ -15,7 +15,9 @@ size_t qpop(Free_queue* queue){
     
     Free_qnode* res = queue->first->next;
     queue->first->next = res->next;
-    return res->index;
+    size_t result = res->index;
+    free(res);
+    return result;
 }
 
 short is_qempty(Free_queue* queue){
@@ -38,6 +40,7 @@ Free_queue* init_queue(){
 
     return queue;
 }
+
 
 
 block_arr* init_array(size_t blk_no){
@@ -100,7 +103,7 @@ size_t read_file_to_block(block_arr* memory, const char* path_to_file){
     size_t file_len = 0;
     if (tmp_file == NULL)
     {
-      perror("Error while opening the file.\n");
+      printf("Error while opening the file.\n");
       exit(EXIT_FAILURE);
     }
 
@@ -112,12 +115,13 @@ size_t read_file_to_block(block_arr* memory, const char* path_to_file){
 
     memory->data[block_index] = calloc(file_len+1, sizeof(char));
 
-    if( memory->data[block_index] == NULL ){       fclose(tmp_file);
-        fputs("memory alloc fails",stderr);
+    if( memory->data[block_index] == NULL ){     
+        fclose(tmp_file);
+        printf("memory alloc fails");
         exit(EXIT_FAILURE);
     }
 
-    size_t res_code = fread(memory->data[block_index], file_len, sizeof(char), tmp_file);
+    size_t res_code = fread(memory->data[block_index], file_len, 1, tmp_file);
 
     if(res_code != 1){
         free (memory->data[block_index]);
