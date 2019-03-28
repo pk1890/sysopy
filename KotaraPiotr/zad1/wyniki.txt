@@ -1,0 +1,224 @@
+
+Testing 4096 blocks 1 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.03s  user time:    0.00s  kernel time:   0.03s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.03s  user time:    0.00s  kernel time:   0.03s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    2.88s  user time:    1.21s  kernel time:   1.66s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    6.32s  user time:    1.61s  kernel time:   4.70s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 2 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.01s  user time:    0.01s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    2.82s  user time:    1.17s  kernel time:   1.64s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    6.34s  user time:    1.63s  kernel time:   4.71s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 512 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.01s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    3.55s  user time:    1.31s  kernel time:   2.23s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    6.65s  user time:    1.58s  kernel time:   5.06s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 1024 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.01s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    4.47s  user time:    1.56s  kernel time:   2.88s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    6.99s  user time:    1.57s  kernel time:   5.41s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 2048 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    6.63s  user time:    1.90s  kernel time:   4.69s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    7.78s  user time:    1.65s  kernel time:   6.10s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 4096 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.02s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    10.18s  user time:    2.05s  kernel time:   8.09s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    9.63s  user time:    1.51s  kernel time:   8.09s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 8192 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.02s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.02s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    14.50s  user time:    2.24s  kernel time:   12.18s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    13.48s  user time:    1.72s  kernel time:   11.72s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 1 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.05s  user time:    0.01s  kernel time:   0.03s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.10s  user time:    0.05s  kernel time:   0.06s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 2 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.04s  user time:    0.02s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.10s  user time:    0.03s  kernel time:   0.07s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 512 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.06s  user time:    0.02s  kernel time:   0.03s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.10s  user time:    0.03s  kernel time:   0.07s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 1024 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.07s  user time:    0.03s  kernel time:   0.04s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.11s  user time:    0.03s  kernel time:   0.08s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 2048 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.10s  user time:    0.03s  kernel time:   0.06s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.11s  user time:    0.02s  kernel time:   0.09s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 512 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.06s  user time:    0.02s  kernel time:   0.03s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.11s  user time:    0.03s  kernel time:   0.08s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 512 blocks 8192 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.19s  user time:    0.02s  kernel time:   0.18s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.18s  user time:    0.02s  kernel time:   0.15s  child user time:    0.00s  child kernel time:   0.00s
+
+==============================
+==============================
+==============================
+
+Testing 1024 blocks 1 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.19s  user time:    0.06s  kernel time:   0.12s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    0.39s  user time:    0.13s  kernel time:   0.27s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 2048 blocks 2 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.00s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    0.71s  user time:    0.28s  kernel time:   0.42s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    1.62s  user time:    0.46s  kernel time:   1.15s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 4096 blocks 512 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.00s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.01s  user time:    0.00s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    3.60s  user time:    1.33s  kernel time:   2.25s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    6.72s  user time:    1.63s  kernel time:   5.09s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 8192 blocks 1024 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.01s  user time:    0.01s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.02s  user time:    0.01s  kernel time:   0.01s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    18.91s  user time:    6.41s  kernel time:   12.41s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    27.83s  user time:    6.59s  kernel time:   21.18s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 8192 blocks 2048 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.02s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.02s  user time:    0.00s  kernel time:   0.02s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    26.53s  user time:    7.70s  kernel time:   18.68s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    31.30s  user time:    6.45s  kernel time:   24.76s  child user time:    0.00s  child kernel time:   0.00s
+
+Testing 16384 blocks 4096 bytes each ================================================
+
+================ Lib copy version: 
+  real time:    0.05s  user time:    0.01s  kernel time:   0.05s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys copy version: 
+  real time:    0.05s  user time:    0.01s  kernel time:   0.04s  child user time:    0.00s  child kernel time:   0.00s
+================ Lib sort version: 
+  real time:    162.68s  user time:    34.38s  kernel time:   127.46s  child user time:    0.00s  child kernel time:   0.00s
+================ Sys sort version: 
+  real time:    149.47s  user time:    26.20s  kernel time:   122.71s  child user time:    0.00s  child kernel time:   0.00s

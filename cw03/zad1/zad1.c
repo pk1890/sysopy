@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #define TIME_FMT "%d.%m.%Y-%H:%M:%S"
 #define nextArg() if(++currArg == argc) exitError("too few args")
@@ -20,7 +21,7 @@ time_t parseDate(char* date);
 void displayFile(const char* path, struct stat statt);
 int cmpTime(time_t modTime, char* option, time_t date);
 int treeNftw (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf);
-
+void lsSearch(const char* path);
 
 char* globalOp;
 time_t globalTime;
@@ -43,8 +44,12 @@ void treeByDate(char* path, char* option, time_t date){
     struct dirent* dent;
     struct stat statt;
     dir = opendir(path);
-    if(dir == NULL) return;;
-
+    if(dir == NULL) return;
+    if(cmpTime(statt.st_mtime, option, date)){
+        lsSearch(path);
+        int *status;
+        wait(status);
+    }
     dent = readdir(dir);
     while (dent){
         if(strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0){
@@ -59,7 +64,7 @@ void treeByDate(char* path, char* option, time_t date){
         if(lstat(rec_path, &statt) == -1) exitError("Error in listing file props");
 
         //if(cmpTime(statt.st_mtime, option, date)){
-            displayFile(rec_path, statt);
+            //displayFile(rec_path, statt);
       //  }
 
         if(S_ISDIR(statt.st_mode)){
@@ -73,10 +78,27 @@ void treeByDate(char* path, char* option, time_t date){
     
 }
 
+void lsSearch(const char* path){
+   pid_t pid = fork();
+
+   if(pid == 0){
+       printf("=========================================================Process ID = %d\n", getpid());
+       execlp("ls","ls", "-l", path, NULL);
+   } else if(pid < 0){
+       exitError("Error in forking");
+   } else{
+       return;
+   }
+}
+
+
 int treeNftw (const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
     if(ftwbuf->level == 0) return 0;
     if(!cmpTime(sb->st_mtime, globalOp, globalTime)) return 0;
-    displayFile(fpath, *sb);
+     lsSearch(fpath);
+     int *a;
+     wait(a);
+    //displayFile(fpath, *sb);
     return 0;
 }
 
