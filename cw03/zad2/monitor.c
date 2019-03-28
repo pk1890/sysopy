@@ -14,7 +14,7 @@
 #define TIME_FMT "_%Y-%m-%d_%H-%M-%S"
 
 
-volatile int monitoring_time = 10;
+volatile int monitoring_time = 30;
 
 void exitError(char* err){
     printf(err);
@@ -24,8 +24,11 @@ void exitError(char* err){
 void monitor_file(char* path, int sec_no);
 void monitor_file_cp(char* path, int sec_no);
 
-int main(void)
+int main(int argc, char** argv)
 {
+    if(argc != 4) exitError("Bad number of args!\n");
+    monitoring_time = atoi(argv[2]);
+
     FILE * listaf;
     char * line = NULL;
     size_t len = 0;
@@ -35,7 +38,7 @@ int main(void)
     int sec_no;
 
 
-    listaf = fopen("lista", "r");
+    listaf = fopen(argv[1], "r");
     if (listaf == NULL)
         exit(EXIT_FAILURE);
 
@@ -54,7 +57,10 @@ int main(void)
         if((token = strtok(NULL, " "))) exitError("Bad arguments \n");
         ///
         printf("=================Token: %s, sec: %d\n", path_to_monitored, sec_no);
-         monitor_file_cp(path_to_monitored, sec_no);
+        if(strcmp(argv[3], "cp") == 0)
+            monitor_file_cp(path_to_monitored, sec_no);
+        else
+            monitor_file(path_to_monitored, sec_no);
     }
     fclose(listaf);
     int status;
@@ -91,50 +97,41 @@ void monitor_file_cp(char* path, int sec_no){
         printf("Inicjalizacja monitoringu, wczytywanie do pamięci... Czas monitoringu co %d \n",  monitoring_time);
         last_modified = statt.st_mtime;
         cp_pid = fork();
-        if(cp_pid == 0){ 
+        if(cp_pid == 0){
             char* mTimetxt = calloc(sizeof(char), 64); 
             strftime(mTimetxt, 64, TIME_FMT, localtime(&last_modified)); 
             path_to_arch = calloc(sizeof(char), 256); 
             snprintf(path_to_arch, 256 ,"./archiwum/%s%s", basename(path), mTimetxt); 
-            execlp("cp", "cp", path, path_to_arch); 
+            printf("cp %s %s\n", path, path_to_arch);
+            free(mTimetxt);
+            execlp("cp", "cp", path, path_to_arch, NULL); 
         }else if(cp_pid < 0) exitError("Error in making process"); 
         else{ 
             wait(NULL); 
         } 
 
-        exit(123);
 
         while(i < monitoring_time)
         {
             lstat(path, &statt);
             if(statt.st_mtime > last_modified){
-                printf("%d, %d", i, monitoring_time);
                 last_modified = statt.st_mtime;
-                FILE* f = fopen(path, "r");
-                if(!f) exitError("Error in opening the file\n");
-                fseek(f, 0L, SEEK_END);
-                file_len = ftell(f);
-                rewind(f);
-                
-                free(buff);
-                buff = (char*)calloc(file_len, sizeof(char));
-                if(fread(buff, sizeof(char), file_len, f) != file_len) exitError("Error in loading a file");
-                fclose(f);
 
-                char* mTimetxt = calloc(sizeof(char), 64);
-                strftime(mTimetxt, 64, TIME_FMT, localtime(&last_modified));
-                path_to_arch = calloc(sizeof(char), 256);
-                snprintf(path_to_arch, 256 ,"./archiwum/%s%s", basename(path), mTimetxt);
-                printf("Zmiana! Tworze plik %s \n", path_to_arch);
-
-                f = fopen(path_to_arch, "w+");
-                fwrite(buff, sizeof(char), file_len, f);
-
-                fclose(f);
-
-                free(mTimetxt);
-                free(path_to_arch);
-                times_modified++;
+                cp_pid = fork();
+                if(cp_pid == 0){
+                    char* mTimetxt = calloc(sizeof(char), 64); 
+                    strftime(mTimetxt, 64, TIME_FMT, localtime(&last_modified)); 
+                    path_to_arch = calloc(sizeof(char), 256); 
+                    snprintf(path_to_arch, 256 ,"./archiwum/%s%s", basename(path), mTimetxt); 
+                    printf("cp %s %s\n", path, path_to_arch);
+                    printf("Zmiana! Tworze plik %s \n", path_to_arch);
+                    free(mTimetxt);
+                    execlp("cp", "cp", path, path_to_arch, NULL); 
+                }else if(cp_pid < 0) exitError("Error in making process"); 
+                else{ 
+                    wait(NULL); 
+                } 
+                    times_modified++;
 
             }
             sleep(sec_no);
