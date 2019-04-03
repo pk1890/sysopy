@@ -21,13 +21,15 @@ void exitError(char* err){
     exit(1);
 }
 
-void monitor_file(char* path, int sec_no);
-void monitor_file_cp(char* path, int sec_no);
+void monitor_file(char* path, int sec_no,rlim_t cpu,rlim_t mem);
+void monitor_file_cp(char* path, int sec_no, rlim_t cpu,rlim_t mem);
 
 int main(int argc, char** argv)
 {
-    if(argc != 4) exitError("Bad number of args!\n");
+    if(argc != 6) exitError("Bad number of args!\n");
     monitoring_time = atoi(argv[2]);
+    rlim_t cpu = atoi(argv[4]);
+	rlim_t mem = atoi(argv[5]) *1024*1024;
 
     FILE * listaf;
     char * line = NULL;
@@ -36,7 +38,7 @@ int main(int argc, char** argv)
     char* token;
     char* path_to_monitored;
     int sec_no;
-
+    struct rusage r_usage, r_usage_next;
 
     listaf = fopen(argv[1], "r");
     if (listaf == NULL)
@@ -58,19 +60,34 @@ int main(int argc, char** argv)
         ///
         printf("=================Token: %s, sec: %d\n", path_to_monitored, sec_no);
         if(strcmp(argv[3], "cp") == 0)
-            monitor_file_cp(path_to_monitored, sec_no);
+            monitor_file_cp(path_to_monitored, sec_no, cpu, mem);
         else
-            monitor_file(path_to_monitored, sec_no);
+            monitor_file(path_to_monitored, sec_no, cpu, mem);
     }
     fclose(listaf);
     int status;
+    if (getrusage(RUSAGE_CHILDREN, &r_usage)) exitError("Blad odczytu rusage\n");
     pid_t pid = wait(&status);
     while (pid != -1){
         if(WIFEXITED(status))
             printf("Proces %d utworzyl %d kopii pliku \n", pid, WEXITSTATUS(status));
         else printf("Proces nie zakonczyl sie prawidlowo, liczba kopii nieznana");
+        
+        if (getrusage(RUSAGE_CHILDREN, &r_usage_next)) exitError("Blad odczytu rusage\n");
+
+        printf("  user: %ld.%08lds\n",
+                r_usage_next.ru_utime.tv_sec - r_usage.ru_utime.tv_sec,
+                r_usage_next.ru_utime.tv_usec - r_usage.ru_utime.tv_usec);
+        printf("  sys:  %ld.%08lds\n",
+                r_usage_next.ru_stime.tv_sec - r_usage.ru_stime.tv_sec,
+                r_usage_next.ru_stime.tv_usec - r_usage.ru_stime.tv_usec);
+        printf("Memory: %ld\n", r_usage_next.ru_maxrss);
+
+        if (getrusage(RUSAGE_CHILDREN, &r_usage)) exitError("Blad odczytu rusage\n");
+
         pid = wait(&status);
     }
+
 
     if (line)
         free(line);
@@ -78,7 +95,7 @@ int main(int argc, char** argv)
     exit(EXIT_SUCCESS);
 }
 
-void monitor_file_cp(char* path, int sec_no){
+void monitor_file_cp(char* path, int sec_no, rlim_t cpu, rlim_t mem){
 
 
     pid_t pid = fork();
@@ -154,7 +171,7 @@ void monitor_file_cp(char* path, int sec_no){
 
 }
 
-void monitor_file(char* path, int sec_no){
+void monitor_file(char* path, int sec_no, rlim_t cpu, rlim_t mem){
     pid_t pid = fork();
     int i = 0;
     short times_modified = 0;    
