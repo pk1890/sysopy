@@ -105,7 +105,7 @@ void endAll(child* children, size_t n){
     }
 }
 
-void exitError(char* err){
+void exiterror(char* err){
     printf(err);
     exit(1);
 }
