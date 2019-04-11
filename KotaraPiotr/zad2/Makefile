@@ -1,15 +1,15 @@
+
 CC=gcc
-CFLAGS = -Wall
 
+FLAGS= -Wall
 
+all: master slave
 
-all: monitor tester
+master: master.c 
+	$(CC) $(FLAGS) -o $@ $?
 
-monitor: monitor.c
-	$(CC) $(CFLAGS) -o $@ $?
-
-tester: tester.c 
-	$(CC) $(CFLAGS) -o $@ $?
-
+slave: slave.c
+	$(CC) $(FLAGS) -o $@ $?
+	
 clean:
-	rm -rf archiwum monitor tester
+	rm -rf master slave fif
