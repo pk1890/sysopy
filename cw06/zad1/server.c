@@ -7,8 +7,8 @@
 #include "common.h"
 #include <errno.h>
 
-#define serverQ 0x01
 
+void handleInit(message *msg);
 
 client clients[MAX_CLIENTS];
 pid_t clients_count = 0;
@@ -41,7 +41,7 @@ void deleteQueue(){
     }
 }
 
-void handleMsg(message *msg){
+void handle_msg(message *msg){
     switch ( msg->command_type)
     {
         case INIT:
@@ -55,13 +55,27 @@ void handleMsg(message *msg){
 
 
 void handleInit(message *msg){
+    printf("Handling INIT\n");
     if(clients_count < MAX_CLIENTS){
-        clients[clients_count] = msg->sender_pid;
+        clients[clients_count].pid = msg->sender_pid;
         int client_key;
         if(sscanf(msg->text, "%d", &client_key) < 0)
             exitError("Failed to read client key");
         clients[clients_count].pid = msg->sender_pid;
-        clients[clients_count].queue_id = client_key;
+        clients[clients_count].queue_id = msgget(client_key, 0);
+        if(clients[clients_count].queue_id == -1) exitErrno("Error in opening client queue");
+
+
+
+        message response;
+        response.mtype = 0;
+        response.sender_pid = getpid();
+        response.sender_id = clients_count;
+
+        if(msgsnd(clients[clients_count].queue_id, &response, MSG_SIZE, 0) == -1){
+            exitErrno("Error in sending id to client");
+        }        
+        printf("send to client new ID  = %d\n", clients_count);
         clients_count++;
 
     }
@@ -70,7 +84,8 @@ void handleInit(message *msg){
 
 void handleEcho(message *msg){
 
-    char* date[128], buff[MAX_MSG_LEN];
+    char date[128];
+    char buff[MAX_MSG_LEN];
     FILE* datef = popen("date", "r");
     fgets(date, 128, datef);
     pclose(datef);
@@ -81,7 +96,9 @@ void handleEcho(message *msg){
     response.command_type = 0;
     snprintf(buff, MAX_MSG_LEN, "[%s]: %s", date, msg->text);
 
-    if(msgsnd(getClientQueue(msg->sender_pid), &response, MSG_SIZE, 0)      
+    if(msgsnd(getClientQueue(msg->sender_pid), &response, MSG_SIZE, 0) == -1)
+        exitErrno("Error in sending message");
+    
     kill(SIGUSR1, msg->sender_pid);
 }
 
@@ -93,16 +110,18 @@ int main(){
         exitError("Error in reading env var");
     key_t key = ftok(path, PROJECT_ID);
 
-    serverQueueD = msgget(key, IPC_CREAT | IPC_EXCL);
+    printf("%d\n", key);
+
+    serverQueueD = msgget(key, IPC_CREAT | IPC_EXCL | 0666);
     if(serverQueueD == -1)
         exitError("Error in creating public server queue\n");
 
     message rcvMsg;
 
     while(1){
-       if(msgrcv(serverQueueD, &rcvMsg, MAX_MSG_LEN, -7, 0) == -1) exitError("Error in reading from queue");
+       if(msgrcv(serverQueueD, &rcvMsg, MSG_SIZE, -7, 0) == -1) exitErrno("Error in reading from queue");
 
-       handle_msg(rcvMsg); 
+       handle_msg(&rcvMsg); 
 
     }
     
@@ -110,7 +129,7 @@ int main(){
 
 
     
-    printf("%s", key);
+    printf("%d", key);
 
     // struct msgbuf msg;
 

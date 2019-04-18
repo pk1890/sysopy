@@ -25,6 +25,7 @@ typedef struct{
 typedef struct{
     long mtype;
     pid_t sender_pid;
+    pid_t sender_id;
     short command_type;
     char text[MAX_MSG_LEN];
 } message;
