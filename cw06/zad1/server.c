@@ -6,9 +6,12 @@
 #include <signal.h>
 #include "common.h"
 #include <errno.h>
+#include <unistd.h>
+#include <string.h>
 
 
 void handleInit(message *msg);
+void handleEcho(message *msg);
 
 client clients[MAX_CLIENTS];
 pid_t clients_count = 0;
@@ -48,6 +51,10 @@ void handle_msg(message *msg){
                 handleInit(msg);
             break;
     
+        case ECHO:
+                handleEcho(msg);
+            break;
+
         default:
             break;
     }
@@ -68,10 +75,11 @@ void handleInit(message *msg){
 
 
         message response;
-        response.mtype = 0;
+        response.mtype = 1;
         response.sender_pid = getpid();
         response.sender_id = clients_count;
-
+        sprintf(response.text, "INIT");
+        response.command_type = INIT;
         if(msgsnd(clients[clients_count].queue_id, &response, MSG_SIZE, 0) == -1){
             exitErrno("Error in sending id to client");
         }        
@@ -83,20 +91,24 @@ void handleInit(message *msg){
 }
 
 void handleEcho(message *msg){
-
+    printf("Handling echo\n");
     char date[128];
     char buff[MAX_MSG_LEN];
     FILE* datef = popen("date", "r");
     fgets(date, 128, datef);
     pclose(datef);
-
+    printf("DATE: %s\n", date);
+    strtok(date, "\n");
     message response;
     response.mtype = 1;
     response.sender_pid = getpid();
     response.command_type = 0;
     snprintf(buff, MAX_MSG_LEN, "[%s]: %s", date, msg->text);
+    strcpy(response.text, buff); 
 
-    if(msgsnd(getClientQueue(msg->sender_pid), &response, MSG_SIZE, 0) == -1)
+
+    printf("Sending response\n");
+    if(msgsnd(clients[msg->sender_id].queue_id, &response, MSG_SIZE, 0) == -1)
         exitErrno("Error in sending message");
     
     kill(SIGUSR1, msg->sender_pid);
