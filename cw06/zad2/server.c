@@ -59,17 +59,17 @@ void deleteQueue(){
             perror("Error in sending id to client");
         }     
         kill(clients[i].pid, SIGUSR1); 
-        message rcvMsg;
-        while(clients_count > 0){
-            
-            if(mq_receive(serverQueueD, (char *) &rcvMsg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
-            handle_msg(&rcvMsg); 
-
-        }  
-        mq_close(serverQueueD);
-        mq_unlink(SERVER_KEY);
 
     }
+    message rcvMsg;
+    while(clients_count > 0){
+        
+        if(mq_receive(serverQueueD, (char *) &rcvMsg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
+        handle_msg(&rcvMsg); 
+
+    }  
+    mq_close(serverQueueD);
+    mq_unlink(SERVER_KEY);
     
     if(serverQueueD != -1){
         if(msgctl(serverQueueD, IPC_RMID, NULL) == -1){

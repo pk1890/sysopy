@@ -57,15 +57,15 @@ void deleteQueue(){
             perror("Error in sending id to client");
         }     
         kill(clients[i].pid, SIGUSR1); 
-        message rcvMsg;
-        while(clients_count > 0){
-            
-            if(msgrcv(serverQueueD, &rcvMsg, MSG_SIZE, -7, 0) == -1) perror("Error in reading from queue");
-            handle_msg(&rcvMsg); 
-
-        }  
 
     }
+    message rcvMsg;
+    while(clients_count > 0){
+        
+        if(msgrcv(serverQueueD, &rcvMsg, MSG_SIZE, -7, 0) == -1) perror("Error in reading from queue");
+        handle_msg(&rcvMsg); 
+
+    }  
     
     if(serverQueueD != -1){
         if(msgctl(serverQueueD, IPC_RMID, NULL) == -1){

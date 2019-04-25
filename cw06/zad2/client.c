@@ -54,7 +54,7 @@ void sigintHandler(){
     msg.command_type = STOP;
     sprintf(msg.text, "a");
 
-    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 3) == -1) exitErrno("Error in sending init query");
     mq_close(client_queue_d);
     deleteQueue();
 }
@@ -169,7 +169,7 @@ void execFriends(char* commandBuffer){
     msg.command_type = FRIENDS;
     sprintf(msg.text, "a");
 
-    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending friends query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 2) == -1) exitErrno("Error in sending friends query");
 }
 
 void execAdd(char* commandBuffer){
