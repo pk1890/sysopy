@@ -2,6 +2,7 @@
 #define COMMON
 
 #include <sys/types.h>
+#include <mqueue.h>
 
 #define INIT 0
 #define ECHO 1
@@ -15,13 +16,19 @@
 #define DEL 9
 #define PRINT 64
 
-#define MAX_MSG_LEN 1024
+// #define MAX_MESSAGES 512
+// #define MAX_MESSAGE_SIZE 2048
+
+#define MAX_MESSAGE_SIZE 1024 
+#define MAX_MESSAGES 10
+
+#define MAX_MSG_LEN 440 
 #define MAX_CLIENTS 20
 #define PROJECT_ID 0x01
 
 typedef struct{
     pid_t pid;
-    int queue_id;
+    mqd_t queue_id;
     short active;
     short friends[MAX_CLIENTS];
 }client;

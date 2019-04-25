@@ -8,7 +8,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <mqueue.h>
 
+#define SERVER_KEY "/server"
 
 void handleInit(message *msg);
 void handleEcho(message *msg);
@@ -53,17 +55,19 @@ void deleteQueue(){
         response.sender_id = i;
         sprintf(response.text, "INIT");
         response.command_type = STOP;
-        if(msgsnd(clients[i].queue_id, &response, MSG_SIZE, 0) == -1){
+        if(mq_send(clients[i].queue_id, (const char *) &response, sizeof(message), 1) == -1){
             perror("Error in sending id to client");
         }     
         kill(clients[i].pid, SIGUSR1); 
         message rcvMsg;
         while(clients_count > 0){
             
-            if(msgrcv(serverQueueD, &rcvMsg, MSG_SIZE, -7, 0) == -1) perror("Error in reading from queue");
+            if(mq_receive(serverQueueD, (char *) &rcvMsg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
             handle_msg(&rcvMsg); 
 
         }  
+        mq_close(serverQueueD);
+        mq_unlink(SERVER_KEY);
 
     }
     
@@ -120,6 +124,7 @@ void handleStop(message *msg){
     printf("Handling stop\n");
     clients[msg->sender_id].active = 0;
     for(int i = 0; i < MAX_CLIENTS; i++) clients[msg->sender_id].friends[i] = 0;
+    mq_close(clients[msg->sender_id].queue_id);
     clients_count--;
 }
 
@@ -134,11 +139,7 @@ void handleInit(message *msg){
         }
 
         clients[index].pid = msg->sender_pid;
-        int client_key;
-        if(sscanf(msg->text, "%d", &client_key) < 0)
-            exitError("Failed to read client key");
-        clients[index].pid = msg->sender_pid;
-        clients[index].queue_id = msgget(client_key, 0);
+        clients[index].queue_id = mq_open(msg->text, O_WRONLY); 
         clients[index].active = 1;
         if(clients[index].queue_id == -1) exitErrno("Error in opening client queue");
 
@@ -150,7 +151,7 @@ void handleInit(message *msg){
         response.sender_id = index;
         sprintf(response.text, "INIT");
         response.command_type = INIT;
-        if(msgsnd(clients[index].queue_id, &response, MSG_SIZE, 0) == -1){
+        if(mq_send(clients[index].queue_id, (const char *) &response, sizeof(message), 1) == -1){
             exitErrno("Error in sending id to client");
         }        
         printf("send to client new ID  = %ld\n", index);
@@ -179,8 +180,9 @@ void handleEcho(message *msg){
 
 
     printf("Sending response\n");
-    if(msgsnd(clients[msg->sender_id].queue_id, &response, MSG_SIZE, 0) == -1)
+    if(mq_send(clients[msg->sender_id].queue_id, (const char *) &response, sizeof(message), 1) == -1){
         exitErrno("Error in sending message");
+    }
     printf("SENDING SIGUSR1 to %d\n", msg->sender_pid);
     const union sigval sig;
     
@@ -210,8 +212,9 @@ void handleList(message *msg){
     strcpy(response.text, buf);
 
     printf("Sending response\n");
-    if(msgsnd(clients[msg->sender_id].queue_id, &response, MSG_SIZE, 0) == -1)
+    if(mq_send(clients[msg->sender_id].queue_id, (const char *) &response, sizeof(message), 1) == -1){
         exitErrno("Error in sending message");
+    }
     printf("SENDING SIGUSR1 to %d\n", msg->sender_pid);
     const union sigval sig;
     
@@ -240,8 +243,9 @@ void handle2one(message *msg){
     strcpy(msg->text, buff);
 
     printf("Sending response\n");
-    if(msgsnd(current_client.queue_id, msg, MSG_SIZE, 0) == -1)
+    if(mq_send(current_client.queue_id, (const char *) msg, sizeof(message), 1) == -1){
         exitErrno("Error in sending message");
+    }
     printf("SENDING SIGUSR1 to %d\n", current_client.pid);
     const union sigval sig;
     
@@ -269,7 +273,7 @@ void handle2all(message *msg){
 
     for(int i = 0; i < MAX_CLIENTS; i++){
         if(i != msg->sender_id && clients[i].active == 1){
-            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1)  exitErrno("Error in sending message");
+            if(mq_send(clients[i].queue_id, (const char *) msg, sizeof(message), 1) == -1)  exitErrno("Error in sending message");
             
             sigqueue(clients[i].pid, SIGUSR1, sig);
         }
@@ -297,7 +301,7 @@ void handle2friends(message *msg){
     client *currClient = &(clients[msg->sender_id]);
     for(int i = 0; i < MAX_CLIENTS; i++){
         if(i != msg->sender_id && clients[i].active == 1 && currClient->friends[i]){
-            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending message");
+            if(mq_send(clients[i].queue_id, (const char *) msg, sizeof(message), 1) == -1)  exitErrno("Error in sending message");
             sigqueue(clients[i].pid, SIGUSR1, sig);
         }
     }
@@ -325,6 +329,7 @@ void handleAddDel(message *msg){
     printf("\n");
 }
 
+
 int main(){
     struct sigaction sig;
     sigemptyset(&sig.sa_mask);
@@ -333,16 +338,19 @@ int main(){
     sig.sa_handler = deleteQueue;
     sigaction(SIGINT, &sig, NULL);
     if(atexit(deleteQueue)) exitError("Can't initialize atexit");
-    char* path = getenv("HOME");
-    if(path == NULL)
-        exitError("Error in reading env var");
-    key_t key = ftok(path, PROJECT_ID);
 
-    printf("%d\n", key);
 
-    serverQueueD = msgget(key, IPC_CREAT | IPC_EXCL | 0666);
+    printf("%s\n", SERVER_KEY);
+
+    struct mq_attr attr;
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = MAX_MESSAGES;
+    attr.mq_msgsize = MAX_MESSAGE_SIZE;
+    attr.mq_curmsgs = 0;
+
+    serverQueueD = mq_open(SERVER_KEY, O_RDONLY | O_CREAT, 0660, &attr);
     if(serverQueueD == -1)
-        exitError("Error in creating public server queue\n");
+        exitErrno("Error in creating public server queue\n");
 
     for(int i = 0; i < MAX_CLIENTS; i++) {
         clients[i].active = 0;
@@ -355,7 +363,7 @@ int main(){
 
 
     while(1){
-       if(msgrcv(serverQueueD, &rcvMsg, MSG_SIZE, -7, 0) == -1) exitErrno("Error in reading from queue");
+        if(mq_receive(serverQueueD, (char *) &rcvMsg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
 
        handle_msg(&rcvMsg); 
 
@@ -365,7 +373,6 @@ int main(){
 
 
     
-    printf("%d", key);
 
     // struct msgbuf msg;
 

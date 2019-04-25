@@ -18,8 +18,6 @@ void handle2all(message *msg);
 void handle2friends(message *msg);
 void handleAddDel(message *msg);
 void handleStop(message *msg);
-void handle_msg(message *msg);
-void handleFriends(message *msg);
 
 client clients[MAX_CLIENTS];
 pid_t clients_count = 0;
@@ -56,7 +54,7 @@ void deleteQueue(){
         if(msgsnd(clients[i].queue_id, &response, MSG_SIZE, 0) == -1){
             perror("Error in sending id to client");
         }     
-        kill(clients[i].pid, SIGUSR1); 
+        kill() 
         message rcvMsg;
         while(clients_count > 0){
             
@@ -128,9 +126,8 @@ void handleInit(message *msg){
     if(clients_count < MAX_CLIENTS){
 
         size_t index = 0;
-        while(index < MAX_CLIENTS){
+        for(index; index < MAX_CLIENTS; index++){
             if(clients[index].active == 0) break;
-            index++;
         }
 
         clients[index].pid = msg->sender_pid;
@@ -153,7 +150,7 @@ void handleInit(message *msg){
         if(msgsnd(clients[index].queue_id, &response, MSG_SIZE, 0) == -1){
             exitErrno("Error in sending id to client");
         }        
-        printf("send to client new ID  = %ld\n", index);
+        printf("send to client new ID  = %d\n", index);
         clients_count++;
 
     }
@@ -163,7 +160,7 @@ void handleInit(message *msg){
 void handleEcho(message *msg){
     printf("Handling echo\n");
     char date[128];
-    char buff[MAX_MSG_LEN];
+    char buff[MAX_MSG_LEN-30];
     FILE* datef = popen("date", "r");
     fgets(date, 128, datef);
     pclose(datef);
@@ -192,7 +189,7 @@ void handleList(message *msg){
     printf("Handling list\n");
     char buf[900];
     char elem[20];
-    buf[0] = 0;
+    sprintf(buf, "");
     size_t off =0;
     for(int i = 0; i < MAX_CLIENTS; i++){
         if(clients[i].active == 1){
@@ -269,9 +266,9 @@ void handle2all(message *msg){
 
     for(int i = 0; i < MAX_CLIENTS; i++){
         if(i != msg->sender_id && clients[i].active == 1){
-            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1)  exitErrno("Error in sending message");
-            
-            sigqueue(clients[i].pid, SIGUSR1, sig);
+            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1)
+                exitErrno("Error in sending message");
+                sigqueue(clients[i].pid, SIGUSR1, sig);
         }
     }
 }
@@ -297,8 +294,9 @@ void handle2friends(message *msg){
     client *currClient = &(clients[msg->sender_id]);
     for(int i = 0; i < MAX_CLIENTS; i++){
         if(i != msg->sender_id && clients[i].active == 1 && currClient->friends[i]){
-            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending message");
-            sigqueue(clients[i].pid, SIGUSR1, sig);
+            if(msgsnd(clients[i].queue_id, msg, MSG_SIZE, 0) == -1)
+                exitErrno("Error in sending message");
+                sigqueue(clients[i].pid, SIGUSR1, sig);
         }
     }
 }

@@ -9,11 +9,13 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <mqueue.h>
 
-int server_queue_d;
+mqd_t server_queue_d;
 int ID = -1;
 
-int client_queue_d;
+char cqname[256];
+mqd_t client_queue_d;
 
 void exitError(char* msg){
     printf("%s\n", msg);
@@ -28,7 +30,7 @@ void exitErrno(char* msg){
 void deleteQueue();
 void responseHandler(){
     message msg;
-    if(msgrcv(client_queue_d, &msg, MSG_SIZE, 0, 0) < 0) exitErrno("Receiving message failed");
+    if(mq_receive(client_queue_d, (char *) &msg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
     switch (msg.command_type)
     {
          case STOP:
@@ -52,47 +54,45 @@ void sigintHandler(){
     msg.command_type = STOP;
     sprintf(msg.text, "a");
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending init query");
+    mq_close(client_queue_d);
     deleteQueue();
 }
 
 void deleteQueue(){
-    if(client_queue_d != -1){
-        if(msgctl(client_queue_d , IPC_RMID, NULL) == -1){
-            printf("Error in deleting queue\n");
-            return;
-        }
-        printf("Queue deleted successfuly\n");
-    }
+    mq_unlink(cqname);
+    printf("client queue deleted succesfully\n");
     _exit(0);
 }
-void init(int serverKey){
-    server_queue_d = msgget(serverKey, 0);
-    if(server_queue_d == -1) exitError("Error in openning server queue");
-
-
+void init(char *path){
+    server_queue_d = mq_open(path, O_WRONLY);
+    printf("Server Queue opened\n");
+    if(server_queue_d == -1) exitErrno("Error in opening server queue");
     if(atexit(sigintHandler)) exitError("Can't initialize atexit");
-    char* path = getenv("HOME");
-    if(path == NULL)
-        exitError("Error in reading env var");
-    key_t key = ftok(path, getpid());
+    sprintf(cqname, "/clientq_%d", getpid());
 
-    printf("%d, PID: %d\n", key, getpid());
+    printf("%s, PID: %d\n", cqname, getpid());
 
-    client_queue_d = msgget(key, IPC_CREAT | IPC_EXCL | 0666);
+    struct mq_attr attr;
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = MAX_MESSAGES;
+    attr.mq_msgsize = MAX_MESSAGE_SIZE;
+    attr.mq_curmsgs = 0;
+
+    client_queue_d = mq_open(cqname, O_RDONLY | O_CREAT, 0666, &attr);
     if(client_queue_d == -1) exitErrno("Error in creating client queue");
+
 
     message msg;
     msg.mtype = 1;
     msg.sender_pid = getpid();
     msg.sender_id = -1;
     msg.command_type = INIT;
-    sprintf(msg.text, "%d", key);
-
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    sprintf(msg.text, "%s", cqname);
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending init query");
 
     printf("QUEUE key sent to server\n");
-    if(msgrcv(client_queue_d, &msg, MSG_SIZE, 0, 0) < 0) exitErrno("Receiving message failed");
+    if(mq_receive(client_queue_d, (char *) &msg, MAX_MESSAGE_SIZE, NULL) == -1) exitErrno("Receiving message failed");
     ID = msg.sender_id;
     printf("RECEIVED ID FROM SERVER - %d\n", ID);
     // if(msgrcv(client_queue_d, &msg, MSG_SIZE, 0, 0) < 0) exitErrno("Receiving message failed");
@@ -109,8 +109,7 @@ void execEcho(char* text){
     msg.sender_id = ID;
     msg.command_type = ECHO;
     sprintf(msg.text, text);
-
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(msg), 1) == -1) exitErrno("Error in sending echo query");
 }
 
 void execList(){
@@ -122,7 +121,7 @@ void execList(){
     msg.command_type = LIST;
     sprintf(msg.text, "a");
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending list query");
 }
 
 void exec2One(char* text, int recID){
@@ -135,7 +134,7 @@ void exec2One(char* text, int recID){
     msg.command_type = TO_ONE;
     sprintf(msg.text, text);
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending 2one query");
 }
 void exec2All(char* text){
 
@@ -147,7 +146,7 @@ void exec2All(char* text){
     msg.command_type = TO_ALL;
     sprintf(msg.text, text);
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending 2all query");
 }
 void execFriends(char* commandBuffer){
     message msg;
@@ -170,7 +169,7 @@ void execFriends(char* commandBuffer){
     msg.command_type = FRIENDS;
     sprintf(msg.text, "a");
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending friends query");
 }
 
 void execAdd(char* commandBuffer){
@@ -194,7 +193,7 @@ void execAdd(char* commandBuffer){
     msg.command_type = ADD;
     sprintf(msg.text, "a");
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending add query");
 }
 void execDel(char* commandBuffer){
     message msg;
@@ -217,7 +216,7 @@ void execDel(char* commandBuffer){
     msg.command_type = DEL;
     sprintf(msg.text, "a");
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending del query");
 }
 void exec2Friends(char* text){
 
@@ -229,7 +228,7 @@ void exec2Friends(char* text){
     msg.command_type = TO_FRIENDS;
     sprintf(msg.text, text);
 
-    if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
+    if(mq_send(server_queue_d, (const char *) &msg, sizeof(message), 1) == -1) exitErrno("Error in sending 2friends query");
 }
 
 void execFile(char* path);
@@ -313,8 +312,7 @@ int main(int argc, char** argv){
 
 
     // signal(SIGINT, sigintHandler);
-    int serverKey = atoi(argv[1]);
-    init(serverKey);
+    init(argv[1]);
 
         //// command prompt
     char commandBuffer[256];

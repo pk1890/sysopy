@@ -9,11 +9,13 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <mqueue.h>
 
-int server_queue_d;
+
+mqd_t server_queue_d;
 int ID = -1;
 
-int client_queue_d;
+mqd_t client_queue_d;
 
 void exitError(char* msg){
     printf("%s\n", msg);
@@ -25,7 +27,6 @@ void exitErrno(char* msg){
     exit(1);
 }
 
-void deleteQueue();
 void responseHandler(){
     message msg;
     if(msgrcv(client_queue_d, &msg, MSG_SIZE, 0, 0) < 0) exitErrno("Receiving message failed");
@@ -42,7 +43,7 @@ void responseHandler(){
     printf(">");
 }
 
-void sigintHandler(){
+void sigintHandler(int no){
     message msg;
 
     msg.mtype = 1;
@@ -66,18 +67,16 @@ void deleteQueue(){
     }
     _exit(0);
 }
-void init(int serverKey){
-    server_queue_d = msgget(serverKey, 0);
-    if(server_queue_d == -1) exitError("Error in openning server queue");
+void init(const char* path){
+    
 
-
+    server_queue_d = mq_open(path, O_WRONLY);
+    if(server_queue_d == -1) exitErrno("Error in opening server queue");
     if(atexit(sigintHandler)) exitError("Can't initialize atexit");
-    char* path = getenv("HOME");
-    if(path == NULL)
-        exitError("Error in reading env var");
-    key_t key = ftok(path, getpid());
+    char buf[256];
+    sprintf(buf, "/clientq_%d", getpid());
 
-    printf("%d, PID: %d\n", key, getpid());
+    printf("%d, PID: %d\n", buf, getpid());
 
     client_queue_d = msgget(key, IPC_CREAT | IPC_EXCL | 0666);
     if(client_queue_d == -1) exitErrno("Error in creating client queue");
@@ -232,7 +231,7 @@ void exec2Friends(char* text){
     if(msgsnd(server_queue_d, &msg, MSG_SIZE, 0) == -1) exitErrno("Error in sending init query");
 }
 
-void execFile(char* path);
+void execFile(const char* path);
 
 void parseCommand(char *commandBuffer){
 
@@ -278,7 +277,7 @@ void parseCommand(char *commandBuffer){
     }
 }
 
-void execFile(char* path){
+void execFile(const char* path){
     char* c = path;
     while (*c != 0 ) {if(*c == 10) *c = 0; c++;}
     FILE* fp = fopen(path, "r");
@@ -313,8 +312,8 @@ int main(int argc, char** argv){
 
 
     // signal(SIGINT, sigintHandler);
-    int serverKey = atoi(argv[1]);
-    init(serverKey);
+    int path = atoi(argv[1]);
+    init(path);
 
         //// command prompt
     char commandBuffer[256];
