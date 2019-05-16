@@ -1,1 +1,0 @@
-ls -l /dev | cat | head -5 | tr b x | grep "x*"

@@ -2,7 +2,7 @@
 
 CC=gcc
 
-FLAGS= -Wall -pthread -lrt 
+FLAGS= -Wall 
 
 all: loader trucker
 
