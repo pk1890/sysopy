@@ -27,8 +27,14 @@ void delBelt(){
 
 void int_handler(int _signum){
     b->isTruckerDone = 1;
-    sleep(1);
+    printf("USTAWIONE\n");
+    while(b->childFinished < b->child_no){
+        printf("CZEKAM\n");
+        sleep(1);
+    }
     deleteBelt(NULL);
+    printf("WYCHODZE\n");
+    exit(0);
 }
 
 

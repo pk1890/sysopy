@@ -42,6 +42,7 @@ typedef struct{
     int weight;
     int semaphores;
     int isTruckerDone;
+    int child_no;
     int childFinished;
     package buff[];
 } belt;

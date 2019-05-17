@@ -65,6 +65,7 @@ belt* createBelt(int size, int maxWeight){
     b->isTruckerDone = 0;
     b->isEmpty = 0;
     b->childFinished = 0;
+    b->child_no = 0;
 
     if ((semaphores[BUFF] = sem_open("/buff", O_RDWR | O_CREAT | O_EXCL, 0666, 1)) == SEM_FAILED) exitErrno("Error in openong semaphore");
     if ((semaphores[EMPTY_SPACES] = sem_open("/empty_spaces", O_RDWR | O_CREAT | O_EXCL, 0666, b->size)) == SEM_FAILED) exitErrno("Error in openong semaphore");
@@ -87,14 +88,22 @@ belt* getBelt(){
     if ((semaphores[EMPTY_SPACES] = sem_open("/empty_spaces", O_RDWR)) == SEM_FAILED)exitErrno("Error in openong semaphore");
     if ((semaphores[ON_BELT] = sem_open("/on_belt", O_RDWR)) == SEM_FAILED) exitErrno("Error in openong semaphore");
 
+    decSem(b, BUFF);
+    b->child_no++;
+    incSem(b, BUFF);
+
     return b;
 }
 
-void closeSem(){
-    
+void closeSem(belt *b){
+    decSem(b, BUFF);
+    b->childFinished++;
+    incSem(b, BUFF);
+    printf("CLOSING SEMAPHORES\n");
     sem_close(semaphores[BUFF]);
     sem_close(semaphores[EMPTY_SPACES]);
     sem_close(semaphores[ON_BELT]);
+    
 }
 
 void deleteBelt(belt* b){
@@ -102,7 +111,7 @@ void deleteBelt(belt* b){
     sem_unlink("/on_belt");
     sem_unlink("/empty_spaces");
     shm_unlink("/belt");
-    exit(0);
+    // exit(0);
 }
 
 package createPackage(int mass){
@@ -115,18 +124,23 @@ package createPackage(int mass){
 
 void putPkgOnBelt(belt* b, package pkg){
     int size, weight, maxWeight, taken;
-    if(b->isTruckerDone) closeSem(); 
+    if(b->isTruckerDone) {
+        // printf("TRUCKER DONE");
+        closeSem(b);
+        exit(0); 
+    }else{
+    // printf("TRUCKER NOT DONE");
     int done = 0;
     printf("Waiting for empty place in belt\n");
     struct timeval start_time = curr_time();
 
-    while(!done){
+    while(!done && !b->isTruckerDone){
         
-        
+        // printf("TRY TO PUT PACKAGE\n");
+        if(b->weight + pkg.mass <= b->maxWeight && !b->isTruckerDone){
         decSem(b, EMPTY_SPACES);
         decSem(b, BUFF);
         gettimeofday(&(pkg.loaded_at),NULL);
-        if(b->weight + pkg.mass <= b->maxWeight && !b->isTruckerDone){
 
             b->buff[b->last] = pkg;
             b->last = (b->last + 1) % b->size;
@@ -150,13 +164,16 @@ void putPkgOnBelt(belt* b, package pkg){
     }
     print_time(pkg.loaded_at);
     printf(", PID:%d, %dkg package loaded after %ld microsec, belt status: %d/%d %dkg/%dkg\n",  pkg.loader, pkg.mass, time_diff(start_time, curr_time()), taken, size, weight, maxWeight);
-
+    }
 }
 
 void getPackageFromBelt(belt *b, truck *t){
 
     int size, weight, maxWeight, taken;
-    if(b->isTruckerDone) closeSem();
+    if(b->isTruckerDone) {
+        closeSem(b);
+        exit(0);
+    }
 
     struct timeval start_time = curr_time();
     printf("Waiting for package in belt\n");
