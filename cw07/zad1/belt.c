@@ -41,15 +41,6 @@ void decSem(belt *b, int semNo){
     }
 }
 
-int decSemNonblock(belt *b, int sem_num)
-{
-    struct sembuf sops[1] = {{sem_num, -1, IPC_NOWAIT}};
-    if (semop(b->semaphores, sops, 1) == -1) {
-        if (errno == EAGAIN || (errno == EINTR && !b->isEmpty)) return -1;
-        else exit(0);
-    }
-    return 0;
-}
 
 belt* createBelt(int size, int maxWeight){
     int shm_id = shmget(get_key(), sizeof(belt) + size * sizeof(package), IPC_CREAT | IPC_EXCL | 0666);

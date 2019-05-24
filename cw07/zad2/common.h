@@ -47,6 +47,7 @@ typedef struct{
     package buff[];
 } belt;
 
+void closeSem(belt *b);
 int secureAtoi(char* txt);
 belt* getBelt();
 belt* createBelt(int size, int maxWeight);

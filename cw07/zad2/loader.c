@@ -42,6 +42,7 @@ int main(int argc, char* args[])
             if (argc > 2 + i + child_count) {
                 for (int j = 0; j < secureAtoi(args[2 + i + child_count]); j++)
                     putPkgOnBelt(b, pkg);
+                closeSem(b);
             } else {
                 while (1) putPkgOnBelt(b, pkg);
             }
