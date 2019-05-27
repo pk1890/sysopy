@@ -31,13 +31,10 @@ typedef struct queue
     size_t size;
 }queue;
 
-typedef struct cart{
-    int free_space;
-    int is_button_pressed;
-}cart;
+//GDZIEŚ DODAĆ NOTIFY ALE NIE WIEM GDZIE BO ZA BARDZO ZMĘCZONY JESTEM   :/
 
 int *client_state;
-cart *carts_data;
+int *carts_free_space;
 
 queue *clients_queue;
 queue *carts_queue;
@@ -45,6 +42,7 @@ queue *carts_queue;
 int CLIENT_COUNT, CART_COUNT, CART_CAPACITY;
 int the_chosen_one = -1;
 int has_client_entered;
+int is_button_pressed;
 
 pthread_t *clients;
 pthread_t *carts;
@@ -55,7 +53,7 @@ pthread_mutex_t button_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t entering_to_cart_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 pthread_cond_t is_this_crate_first = PTHREAD_COND_INITIALIZER;
-pthread_cond_t is_button_pressed = PTHREAD_COND_INITIALIZER;
+pthread_cond_t is_button_pressed_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t has_client_entered_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t can_client_enter_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t has_someone_been_chosen_cond = PTHREAD_COND_INITIALIZER;
@@ -103,7 +101,7 @@ void* cart_thread(void* args){
     printf("[CART %d ]: Opening door\n");
     pthread_mutex_unlock(&cart_to_platform_mutex);
     pthread_mutex_lock(&entering_to_cart_mutex);
-    whlie(carts_data[ID].free_space > 0){
+    whlie(carts_free_space[ID] > 0){
         curr_passenger_id = get_from_queue(clients_queue);
         client_state[curr_passenger_id] = RIDING;
         passenger[count] = curr_passenger_id;
@@ -112,7 +110,7 @@ void* cart_thread(void* args){
             pthread_cond_wait(&has_client_entered_cond, &entering_to_cart_mutex);
         }
         has_client_entered = 0;
-        carts_data[i].free_space--;
+        carts_free_space[i].free_space--;
         count++;
     }
     pthread_mutex_unlock(&entering_to_cart_mutex);
@@ -120,8 +118,8 @@ void* cart_thread(void* args){
     pthread_mutex_lock(&button_mutex);
 
     the_chosen_one = passenger[rand() % CART_CAPACITY];
-
-    while(carts_data[ID].is_button_pressed == 0){
+    is_button_pressed = 0;
+    while(is_button_pressed == 0){
         pthread_cond_wait(&is_button_pressed, &button_mutex);
     }
     
@@ -145,13 +143,17 @@ void* client_thread(void * args){
         pthread_mutex_wait(&can_client_enter_cond, &entering_to_cart_mutex);
     }
     int current_cart = seek_from_queue(carts_queue);
-    printf("[CLIENT %d]: Entering to cart n: %d, already %d in", ID, current_cart, CART_CAPACITY - carts_data[current_cart].free_space);
+    printf("[CLIENT %d]: Entering to cart n: %d, already %d in", ID, current_cart, CART_CAPACITY - carts_free_space[current_cart].free_space);
     has_client_entered = 1;
     pthread_mutex_unlock(&entering_to_cart_mutex);
     
     pthread_mutex_lock(&button_mutex);
     while(the_chosen_one == -1){
-        pthread_cond_wait()
+        pthread_cond_wait(&has_someone_been_chosen_cond, &button_mutex);
+    }
+
+    if(the_chosen_one == ID){
+        is_button_pressed = 1;
     }
     
 
@@ -176,11 +178,11 @@ int main(int argc, char **argv){
 
     carts = malloc(sizeof(pthread_t) * CLIENT_COUNT);    
     if(carts == NULL) exitErrno("Error in allocating carts");
-    carts_data = malloc(CART_COUNT * sizeof(cart));
-    if(carts_data == NULL) exitErrno("Error in allocating carts");
+    carts_free_space = malloc(CART_COUNT * sizeof(cart));
+    if(carts_free_space == NULL) exitErrno("Error in allocating carts");
     for(int i = 0; i < CART_COUNT; i++){
-        carts_data[i].free_space = CART_CAPACITY;
-        carts_data[i].is_button_pressed = 0;
+        carts_free_space[i].free_space = CART_CAPACITY;
+        carts_free_space[i].is_button_pressed = 0;
     }
 
     for(int i = 0; i < CLIENT_COUNT; i++){
