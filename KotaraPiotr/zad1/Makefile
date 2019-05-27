@@ -1,18 +1,10 @@
-
-
 CC=gcc
+FLAGS= -Wall -Werror -lpthread -lm
 
-FLAGS= -Wall 
+all: filtering
 
-all: loader trucker
+filtering: zad1.c
+	$(CC) $(FLAGS) $? -o $@
 
-trucker: trucker.c common.c belt.c
-	$(CC) $(FLAGS) -o $@ $?
-
-loader: loader.c common.c belt.c
-	$(CC) $(FLAGS) -o $@ $?
-	
 clean:
-	rm -rf loader trucker
-
-
+	rm -rf filtering

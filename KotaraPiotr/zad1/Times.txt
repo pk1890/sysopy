@@ -1,0 +1,66 @@
+===
+=== B ===
+==
+== 1 threads ==
+thread 1:	160593us
+total time:	160767us
+sum time:	160593us
+==
+== 2 threads ==
+thread 1:	94679us
+thread 2:	94035us
+total time:	94711us
+sum time:	188714us
+==
+== 4 threads ==
+thread 1:	79054us
+thread 2:	79747us
+thread 3:	79285us
+thread 4:	79664us
+total time:	79763us
+sum time:	317750us
+==
+== 8 threads ==
+thread 1:	72336us
+thread 2:	62304us
+thread 3:	68296us
+thread 4:	67004us
+thread 5:	66968us
+thread 6:	75969us
+thread 7:	70686us
+thread 8:	77219us
+total time:	80664us
+sum time:	560782us
+===
+=== I ===
+==
+== 1 threads ==
+thread 1:	162408us
+total time:	162584us
+sum time:	162408us
+==
+== 2 threads ==
+thread 1:	121788us
+thread 2:	121126us
+total time:	121836us
+sum time:	242914us
+==
+== 4 threads ==
+thread 1:	79708us
+thread 2:	78611us
+thread 3:	80080us
+thread 4:	76796us
+total time:	80084us
+sum time:	315195us
+==
+== 8 threads ==
+thread 1:	39512us
+thread 2:	69652us
+thread 3:	76737us
+thread 4:	78171us
+thread 5:	68742us
+thread 6:	68660us
+thread 7:	67067us
+thread 8:	64385us
+total time:	85767us
+sum time:	532926us
