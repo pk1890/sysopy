@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
+#include <semaphore.h>
 
 #define WAITING 0
 #define RIDING 1
@@ -39,7 +40,7 @@ int *carts_free_space;
 queue *clients_queue;
 queue *carts_queue;
 
-int CLIENT_COUNT, CART_COUNT, CART_CAPACITY;
+int CLIENT_COUNT, CART_COUNT, CART_CAPACITY, RIDES_COUNT;
 int the_chosen_one = -1;
 int has_client_entered;
 int is_button_pressed;
@@ -57,6 +58,8 @@ pthread_cond_t is_button_pressed_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t has_client_entered_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t can_client_enter_cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t has_someone_been_chosen_cond = PTHREAD_COND_INITIALIZER;
+
+sem_t active_carts_sem;
 
 queue *init_queue(size_t size){
     queue *q = malloc(sizeof(queue));
@@ -89,74 +92,97 @@ int seek_from_queue(queue *q){
 }
 
 void* cart_thread(void* args){
+    // printf("MLEKO\n");
     int ID = *(int*)args;
     int *passenger = malloc(CART_CAPACITY * sizeof(int));
     int count = 0;
     int curr_passenger_id;
-
-    pthread_mutex_lock(&cart_to_platform_mutex);
-    while(seek_from_queue(carts_queue) != ID){
-        pthread_cond_wait(&is_this_crate_first, &cart_to_platform_mutex);
-    }
-    printf("[CART %d ]: Opening door\n");
-    pthread_mutex_unlock(&cart_to_platform_mutex);
-    pthread_mutex_lock(&entering_to_cart_mutex);
-    whlie(carts_free_space[ID] > 0){
-        curr_passenger_id = get_from_queue(clients_queue);
-        client_state[curr_passenger_id] = RIDING;
-        passenger[count] = curr_passenger_id;
-        has_client_entered = 0;
-        while(has_client_entered == 0){
-            pthread_cond_wait(&has_client_entered_cond, &entering_to_cart_mutex);
+    for(int i = 0; i < RIDES_COUNT; i++){
+        pthread_mutex_lock(&cart_to_platform_mutex);
+        add_to_queue(carts_queue, ID);
+        printf("[CART %d ]: AM I THE FIRST?\n", ID);
+        while(seek_from_queue(carts_queue) != ID){
+            printf("[CART %d ]: Waiting in queue\n", ID);
+            pthread_cond_wait(&is_this_crate_first, &cart_to_platform_mutex);
         }
-        has_client_entered = 0;
-        carts_free_space[i].free_space--;
-        count++;
-    }
-    pthread_mutex_unlock(&entering_to_cart_mutex);
+        printf("[CART %d ]: Opening door\n", ID);
+        pthread_mutex_unlock(&cart_to_platform_mutex);
+        pthread_mutex_lock(&entering_to_cart_mutex);
+        while(carts_free_space[ID] > 0){
+            curr_passenger_id = get_from_queue(clients_queue);
+            client_state[curr_passenger_id] = RIDING;
+            passenger[count] = curr_passenger_id;
+            has_client_entered = 0;
+            pthread_cond_broadcast(&can_client_enter_cond);
+            while(has_client_entered == 0){
+                pthread_cond_wait(&has_client_entered_cond, &entering_to_cart_mutex);
+            }
+            has_client_entered = 0;
+            carts_free_space[ID]--;
+            count++;
+        }
+        pthread_mutex_unlock(&entering_to_cart_mutex);
 
-    pthread_mutex_lock(&button_mutex);
-
-    the_chosen_one = passenger[rand() % CART_CAPACITY];
-    is_button_pressed = 0;
-    while(is_button_pressed == 0){
-        pthread_cond_wait(&is_button_pressed, &button_mutex);
+        pthread_mutex_lock(&button_mutex);
+        printf("[CART %d ]: CHOOSING THE CHOSEN ONE\n", ID);
+        the_chosen_one = passenger[rand() % CART_CAPACITY];
+        is_button_pressed = 0;
+        printf("[CART %d ]: THE CHOSEN ONE IS %d\n", ID, the_chosen_one);
+        pthread_cond_broadcast(&has_someone_been_chosen_cond);
+        while(is_button_pressed == 0){
+            pthread_cond_wait(&is_button_pressed_cond, &button_mutex);
+        }
+        
+        printf("[CART %d ]: Closing door\n", ID);
+        the_chosen_one = -1;
+        printf("[CART %d ]: Starting the wonderful adventure\n", ID);
+        get_from_queue(carts_queue);
+        pthread_cond_broadcast(&is_this_crate_first);
+        pthread_mutex_unlock(&button_mutex);
+        printf("[CART %d ]: Ending the wonderful adventure :( \n", ID);
     }
-    
-    printf("[CART %d ]: Closing door\n");
-    the_chosen_one = -1;
-    pthread_mutex_unlock(&button_mutex);
-    printf("[CART %d ]: Starting the wonderful adventure\n");
-    get_from_queue(carts_queue);
+    if(sem_trywait(&active_carts_sem) == -1) exitError("More carts ended than started");
+    return NULL;
 }
 
 void* client_thread(void * args){
     int ID = *(int*) args;
+    int active_carts;
+    while(true){
+        if(sem_getvalue(&active_carts_sem, &active_carts) == -1) exitErrno("Error in getting value of semaphore");
+        pthread_mutex_lock(&client_queue_mutex);
+        add_to_queue(clients_queue, ID);
+        pthread_mutex_unlock(&client_queue_mutex);
 
-    pthread_mutex_lock(&client_queue_mutex);
-    add_to_queue(clients_queue, ID);
-    pthread_mutex_unlock(&client_queue_mutex);
+        pthread_mutex_lock(&entering_to_cart_mutex);
 
-    pthread_mutex_lock(&entering_to_cart_mutex);
+        while(client_state[ID] == WAITING){
+            pthread_cond_wait(&can_client_enter_cond, &entering_to_cart_mutex);
+        }
+        int current_cart = seek_from_queue(carts_queue);
+        printf("[CLIENT %d]: Entering to cart n: %d, already %d in\n", ID, current_cart, CART_CAPACITY - carts_free_space[current_cart]);
+        has_client_entered = 1;
+        pthread_cond_signal(&has_client_entered_cond);
+        pthread_mutex_unlock(&entering_to_cart_mutex);
+        
+        pthread_mutex_lock(&button_mutex);
+        while(the_chosen_one == -1){
+            // printf("waiting to point chosen one, currently %d\n", the_chosen_one);
+            pthread_cond_wait(&has_someone_been_chosen_cond, &button_mutex);
+        }
 
-    while(client_state[ID] == WAITING){
-        pthread_mutex_wait(&can_client_enter_cond, &entering_to_cart_mutex);
-    }
-    int current_cart = seek_from_queue(carts_queue);
-    printf("[CLIENT %d]: Entering to cart n: %d, already %d in", ID, current_cart, CART_CAPACITY - carts_free_space[current_cart].free_space);
-    has_client_entered = 1;
-    pthread_mutex_unlock(&entering_to_cart_mutex);
-    
-    pthread_mutex_lock(&button_mutex);
-    while(the_chosen_one == -1){
-        pthread_cond_wait(&has_someone_been_chosen_cond, &button_mutex);
-    }
+        if(the_chosen_one == ID){
+            is_button_pressed = 1;
+            printf("[CLIENT %d]: PUSHING THE BUTTON IN CART: %d, already %d in\n", ID, current_cart, CART_CAPACITY - carts_free_space[current_cart]);
+            pthread_cond_signal(&is_button_pressed_cond);
+        }
+        printf("ENJOYING THE RIDE\n");
+        
+        pthread_mutex_unlock(&button_mutex);
 
-    if(the_chosen_one == ID){
-        is_button_pressed = 1;
-    }
-    
+    }   
 
+    return NULL;
 
 }
 
@@ -167,9 +193,10 @@ int main(int argc, char **argv){
     CLIENT_COUNT = atoi(argv[1]);
     CART_COUNT = atoi(argv[2]);
     CART_CAPACITY = atoi(argv[3]);
-
+    RIDES_COUNT = atoi(argv[4]);
     clients_queue = init_queue(CLIENT_COUNT);
     carts_queue = init_queue(CART_COUNT);
+    if(sem_init(&active_carts_sem, 0, CART_COUNT) == -1) exitErrno("Could not initialize semaphore");
 
     clients = malloc(sizeof(pthread_t) * CLIENT_COUNT);    
     if(clients == NULL) exitErrno("Error in allocating clients");
@@ -178,11 +205,10 @@ int main(int argc, char **argv){
 
     carts = malloc(sizeof(pthread_t) * CLIENT_COUNT);    
     if(carts == NULL) exitErrno("Error in allocating carts");
-    carts_free_space = malloc(CART_COUNT * sizeof(cart));
+    carts_free_space = malloc(CART_COUNT * sizeof(int));
     if(carts_free_space == NULL) exitErrno("Error in allocating carts");
     for(int i = 0; i < CART_COUNT; i++){
-        carts_free_space[i].free_space = CART_CAPACITY;
-        carts_free_space[i].is_button_pressed = 0;
+        carts_free_space[i] = CART_CAPACITY;
     }
 
     for(int i = 0; i < CLIENT_COUNT; i++){
@@ -195,6 +221,12 @@ int main(int argc, char **argv){
         int *cart_id = malloc(sizeof(int));
         *cart_id = i;
         if(pthread_create(clients+i, NULL, cart_thread, (void *) cart_id) != 0) exitErrno("Cannot create client thread");
+    }    
+    for(int i = 0; i < CLIENT_COUNT; i++){
+        pthread_join(clients[i], NULL);
+    }    
+    for(int i = 0; i < CART_COUNT; i++){
+        pthread_join(carts[i], NULL);
     }    
 
     exit(0);
